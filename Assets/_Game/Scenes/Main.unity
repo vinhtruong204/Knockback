@@ -409,6 +409,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 2737958118500723155, guid: 164c784906c75ba4792232225a03fb58, type: 3}
+      propertyPath: m_Mass
+      value: 1.8147433
+      objectReference: {fileID: 0}
+    - target: {fileID: 2737958118500723155, guid: 164c784906c75ba4792232225a03fb58, type: 3}
+      propertyPath: m_UseAutoMass
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4131256932631747406, guid: 164c784906c75ba4792232225a03fb58, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.58
@@ -450,32 +458,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects:
-    - {fileID: 7632808243941163883, guid: 164c784906c75ba4792232225a03fb58, type: 3}
+    m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 8767711939958125950, guid: 164c784906c75ba4792232225a03fb58, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1393670561}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 164c784906c75ba4792232225a03fb58, type: 3}
---- !u!1 &1393670560 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8767711939958125950, guid: 164c784906c75ba4792232225a03fb58, type: 3}
-  m_PrefabInstance: {fileID: 1393670559}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1393670561
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1393670560}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3320a52db9f002a41a8ecb74a31c5454, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _settings: {fileID: 0}
 --- !u!1 &1402028171
 GameObject:
   m_ObjectHideFlags: 0
@@ -647,6 +633,10 @@ PrefabInstance:
     - target: {fileID: 1253894637964660339, guid: 94dc6ee312c912349a659edf3d0456af, type: 3}
       propertyPath: m_Name
       value: projectile_trail_basic_0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1253894637964660339, guid: 94dc6ee312c912349a659edf3d0456af, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6627058760557678351, guid: 94dc6ee312c912349a659edf3d0456af, type: 3}
       propertyPath: m_LocalPosition.x
