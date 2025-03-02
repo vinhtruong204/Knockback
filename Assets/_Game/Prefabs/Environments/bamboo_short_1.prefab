@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7085720836145467908}
   - component: {fileID: 1192416413484565321}
   m_Layer: 6
-  m_Name: BambooPlatform_Short
+  m_Name: bamboo_short_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

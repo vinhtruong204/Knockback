@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -42,6 +43,38 @@ public class PlayerMovement : MonoBehaviour
     private void OnMoveInput(Vector2 vector)
     {
         moveInput = vector;
+
+        if (moveInput.x != 0f)
+            FlipPlayer();
+
+
+        if (moveInput.y < 0f)
+        {
+            // Ignore collision with ground
+            StartCoroutine(IgnoreCollisionWithGround());
+        }
+    }
+
+    /// <summary>
+    /// Flip the player sprite based on the move direction
+    /// </summary>
+    private void FlipPlayer()
+    {
+        if (moveInput.x > 0)
+            transform.parent.localScale = new Vector3(1, 1, 1);
+        else if (moveInput.x < 0)
+            transform.parent.localScale = new Vector3(-1, 1, 1);
+    }
+
+    /// <summary>
+    /// Ignore collision with ground for a short duration
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator IgnoreCollisionWithGround()
+    {
+        Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("Ground"), true);
+        yield return new WaitForSeconds(0.6f);
+        Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("Ground"), false);
     }
 
     private void FixedUpdate()

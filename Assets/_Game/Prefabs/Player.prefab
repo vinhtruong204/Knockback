@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5900034977309487648}
   - component: {fileID: 2517024663103994538}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: batch_Body_0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -98,7 +98,7 @@ GameObject:
   - component: {fileID: 4131256932631747406}
   - component: {fileID: 2737958118500723155}
   - component: {fileID: 9001976843693248792}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -121,6 +121,7 @@ Transform:
   - {fileID: 8638820250685978191}
   - {fileID: 1853017291628283295}
   - {fileID: 7391330232415459403}
+  - {fileID: 6558131643452466971}
   - {fileID: 7016429394715785493}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -140,7 +141,7 @@ Rigidbody2D:
   m_LinearDamping: 0
   m_AngularDamping: 0.05
   m_GravityScale: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: cbfaeb8eb30cdc2429f5d2c612c4601c, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -207,7 +208,7 @@ GameObject:
   m_Component:
   - component: {fileID: 729231727319269441}
   - component: {fileID: 2706179702357167050}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: batch_Head_0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -293,7 +294,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9152796494752203167}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -327,7 +328,7 @@ GameObject:
   - component: {fileID: 7016429394715785493}
   - component: {fileID: 2416425679900873828}
   - component: {fileID: 7944321222203756361}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Input
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -401,7 +402,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8638820250685978191}
   - component: {fileID: 7092670648583220230}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Animation
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -459,7 +460,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9172119452994909763}
   - component: {fileID: 4635450638349595726}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: batch_Left Leg_0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -545,7 +546,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9000742545390656053}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Hand
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -578,7 +579,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7445569995494869613}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Head
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -611,7 +612,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5452893927684336016}
   - component: {fileID: 8659990208995795937}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: batch_Left Hand_0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -698,7 +699,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2857810753592575362}
   - component: {fileID: 2132674358438754176}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: batch_Right Hand_0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -776,6 +777,37 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &6525524847196130539
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6558131643452466971}
+  m_Layer: 3
+  m_Name: Shoot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6558131643452466971
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6525524847196130539}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4131256932631747406}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6805353842902685739
 GameObject:
   m_ObjectHideFlags: 0
@@ -786,7 +818,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7288263111937675350}
   - component: {fileID: 3264552693160823906}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: ak_0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -874,7 +906,7 @@ GameObject:
   - component: {fileID: 7391330232415459403}
   - component: {fileID: 1232414780498370753}
   - component: {fileID: 3944356867765409994}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Jump
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -908,9 +940,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0fa444a18e9b834782b2476834660e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _settings: {fileID: 0}
-  _rigidbody: {fileID: 0}
-  jumpCount: 0
 --- !u!61 &3944356867765409994
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -967,7 +996,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5441308682811173200}
   - component: {fileID: 3911967140625207998}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: batch_Right Leg_0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1053,7 +1082,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8511087167814886043}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Leg
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1087,7 +1116,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1853017291628283295}
   - component: {fileID: 8326932150039926630}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Movement
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1121,5 +1150,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3320a52db9f002a41a8ecb74a31c5454, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _settings: {fileID: 0}
-  _rigidbody: {fileID: 0}
