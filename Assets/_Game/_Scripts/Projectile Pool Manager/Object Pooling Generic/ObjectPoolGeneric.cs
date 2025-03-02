@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -13,7 +12,7 @@ public class ObjectPoolGeneric<T> where T : MonoBehaviour
     {
         _prefab = prefab;
         _initialSize = initialSize;
-        _parent = parent != null ? parent : new GameObject(typeof(T).Name + "Pool").transform;
+        _parent = parent == null ? new GameObject(prefab.name + "Pool").transform : parent;
 
         _pool = new();
 
@@ -27,13 +26,13 @@ public class ObjectPoolGeneric<T> where T : MonoBehaviour
 
     private T CreateObject()
     {
-        T obj = UnityEngine.Object.Instantiate(_prefab);
+        T obj = Object.Instantiate(_prefab);
         obj.gameObject.SetActive(false);
         obj.transform.SetParent(_parent);
         return obj;
     }
 
-    public T GetObject(Vector2 position, Quaternion rotation)
+    public T GetObject(Transform spawnTransform)
     {
         T obj;
 
@@ -46,9 +45,10 @@ public class ObjectPoolGeneric<T> where T : MonoBehaviour
             obj = _pool.Dequeue();
         }
 
+        obj.transform.SetPositionAndRotation(spawnTransform.position, spawnTransform.rotation);
+        obj.transform.localScale = spawnTransform.localScale;
         obj.gameObject.SetActive(true);
-        obj.transform.SetPositionAndRotation(position, rotation);
-        
+
         return obj;
     }
 
