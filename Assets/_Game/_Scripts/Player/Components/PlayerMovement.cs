@@ -1,24 +1,32 @@
-using System;
+using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.ResourceManagement.AsyncOperations;
 
 public class PlayerMovement : MonoBehaviour
 {
     private PlayerMovementConfigSO _settings;
-    private Rigidbody2D _rb;
+    private Rigidbody2D _rigidbody;
     private Vector2 moveInput;
 
     private async void Awake()
     {
-        // Load the player settings
-        (PlayerMovementConfigSO settings, AsyncOperationHandle<PlayerMovementConfigSO> handle) = await AddressableLoader<PlayerMovementConfigSO>.LoadAssetAsync("PlayerSettings");
+        await LoadPlayerSettings();
 
-        _settings = settings;
+        InitializeRigidbody();
+    }
+
+    private async Task LoadPlayerSettings()
+    {
+        var (asset, handle) = await AddressableLoader<PlayerMovementConfigSO>.LoadAssetAsync("PlayerSettings");
+
+        _settings = asset;
         AddressableLoader<PlayerMovementConfigSO>.ReleaseHandle(handle);
+    }
 
-        // Get the rigidbody component
-        _rb = GetComponentInParent<Rigidbody2D>();
-        _rb.linearDamping = _settings.linearDamping;
+
+    private void InitializeRigidbody()
+    {
+        _rigidbody = GetComponentInParent<Rigidbody2D>();
+        _rigidbody.linearDamping = _settings.linearDamping;
     }
 
     private void OnEnable()
@@ -41,20 +49,24 @@ public class PlayerMovement : MonoBehaviour
         MovePlayer();
     }
 
+    /// <summary>
+    /// Move the player based on input and settings
+    /// </summary>
     private void MovePlayer()
     {
         if (moveInput.magnitude <= 0.1f) return;
-        
-        Vector2 targetVelocity = moveInput * _settings.moveSpeed;
 
-        // Calculate force to add 
-        Vector2 force = (targetVelocity - _rb.linearVelocity) * _settings.acceleration;
-        _rb.AddForce(force, ForceMode2D.Force);
+        Vector2 targetVelocity = new(moveInput.x * _settings.moveSpeed, _rigidbody.linearVelocityY);
 
-        // Limit max speed
-        if (_rb.linearVelocity.magnitude > _settings.maxSpeed)
+        // Calculate the force to apply
+        Vector2 force = new((targetVelocity.x - _rigidbody.linearVelocityX) * _settings.acceleration, 0);
+
+        _rigidbody.AddForce(force, ForceMode2D.Force);
+
+        // Clamp the velocity to the max speed
+        if (Mathf.Abs(_rigidbody.linearVelocityX) > _settings.maxSpeed)
         {
-            _rb.linearVelocity = _rb.linearVelocity.normalized * _settings.maxSpeed;
+            _rigidbody.linearVelocity = new(Mathf.Sign(_rigidbody.linearVelocityX) * _settings.maxSpeed, _rigidbody.linearVelocityY);
         }
     }
 

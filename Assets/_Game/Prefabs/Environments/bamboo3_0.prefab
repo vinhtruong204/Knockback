@@ -11,7 +11,8 @@ GameObject:
   - component: {fileID: 7210305611669063787}
   - component: {fileID: 7546455492559299906}
   - component: {fileID: 5082859519744352359}
-  m_Layer: 0
+  - component: {fileID: -3566099971243342800}
+  m_Layer: 6
   m_Name: bamboo3_0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -119,7 +120,7 @@ BoxCollider2D:
     serializedVersion: 2
     m_Bits: 4294967295
   m_IsTrigger: 0
-  m_UsedByEffector: 0
+  m_UsedByEffector: 1
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: -0.02221775, y: -0.1458438}
@@ -134,3 +135,22 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 10.3556, y: 0.18173349}
   m_EdgeRadius: 0
+--- !u!251 &-3566099971243342800
+PlatformEffector2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1963108706661885610}
+  m_Enabled: 1
+  m_UseColliderMask: 0
+  m_ColliderMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RotationalOffset: 0
+  m_UseOneWay: 1
+  m_UseOneWayGrouping: 0
+  m_SurfaceArc: 179
+  m_UseSideFriction: 0
+  m_UseSideBounce: 0
+  m_SideArc: 1

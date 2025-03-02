@@ -132,14 +132,6 @@ PrefabInstance:
       value: BambooPlatform_Tall (1)
       objectReference: {fileID: 0}
     - target: {fileID: 3991427747976758991, guid: 308d91e4b90219e46a7cb09bdffdcdff, type: 3}
-      propertyPath: m_LocalScale.x
-      value: -1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3991427747976758991, guid: 308d91e4b90219e46a7cb09bdffdcdff, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 0.8
-      objectReference: {fileID: 0}
-    - target: {fileID: 3991427747976758991, guid: 308d91e4b90219e46a7cb09bdffdcdff, type: 3}
       propertyPath: m_LocalPosition.x
       value: 4.37
       objectReference: {fileID: 0}
@@ -200,10 +192,6 @@ PrefabInstance:
     - target: {fileID: 1963108706661885610, guid: c5b2acf416734864d93a25647f1f8713, type: 3}
       propertyPath: m_Name
       value: bamboo3_0 (1)
-      objectReference: {fileID: 0}
-    - target: {fileID: 7210305611669063787, guid: c5b2acf416734864d93a25647f1f8713, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 0.8
       objectReference: {fileID: 0}
     - target: {fileID: 7210305611669063787, guid: c5b2acf416734864d93a25647f1f8713, type: 3}
       propertyPath: m_LocalPosition.x
@@ -409,14 +397,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
-    - target: {fileID: 2737958118500723155, guid: 164c784906c75ba4792232225a03fb58, type: 3}
-      propertyPath: m_Mass
-      value: 1.8147433
-      objectReference: {fileID: 0}
-    - target: {fileID: 2737958118500723155, guid: 164c784906c75ba4792232225a03fb58, type: 3}
-      propertyPath: m_UseAutoMass
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 4131256932631747406, guid: 164c784906c75ba4792232225a03fb58, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.58
@@ -471,7 +451,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1402028172}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Evironment
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -491,9 +471,9 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 60947328}
   - {fileID: 1700751112}
   - {fileID: 2006370533}
-  - {fileID: 60947328}
   - {fileID: 769885107}
   - {fileID: 103139662}
   m_Father: {fileID: 0}

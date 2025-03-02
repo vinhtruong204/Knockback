@@ -6,26 +6,49 @@ using UnityEngine.InputSystem;
 public class PlayerInputHandler : MonoBehaviour
 {
     private PlayerInput playerInput;
+    private InputAction moveInputAction;
+    private InputAction jumpInputAction;
 
     // Move event
     public static event Action<Vector2> OnMove;
-    private InputAction moveInputAction;
+    public static event Action OnJump;
 
     private void OnEnable()
     {
         // Get input action
         playerInput = GetComponent<PlayerInput>();
         moveInputAction = playerInput.actions["Move"];
+        jumpInputAction = playerInput.actions["Jump"];
 
-        if (moveInputAction == null)
+        // Check if the input action is null
+        if (jumpInputAction != null)
         {
-            Debug.LogError("Move input action not found!");
-            return;
+            // Subscribe to input events
+            jumpInputAction.performed += OnJumpInput;
+        }
+        else
+        {
+            Debug.LogError("Jump input action not found!");
         }
 
-        // Subscribe to input events
-        moveInputAction.performed += OnMoveInput;
-        moveInputAction.canceled += OnMoveInput;
+
+
+        if (moveInputAction != null)
+        {
+            // Subscribe to input events
+            moveInputAction.performed += OnMoveInput;
+            moveInputAction.canceled += OnMoveInput;
+        }
+        else
+        {
+            Debug.LogError("Move input action not found!");
+        }
+
+    }
+
+    private void OnJumpInput(InputAction.CallbackContext context)
+    {
+        OnJump?.Invoke();
     }
 
     private void OnMoveInput(InputAction.CallbackContext context)
@@ -35,9 +58,17 @@ public class PlayerInputHandler : MonoBehaviour
 
     private void OnDisable()
     {
-        if (moveInputAction == null) return;
+        // Unsubscribe from input events
+        if (jumpInputAction != null)
+        {
+            jumpInputAction.performed -= OnJumpInput;
+        }
 
-        moveInputAction.performed -= OnMoveInput;
-        moveInputAction.canceled -= OnMoveInput;
+
+        if (moveInputAction != null)
+        {
+            moveInputAction.performed -= OnMoveInput;
+            moveInputAction.canceled -= OnMoveInput;
+        }
     }
 }
