@@ -6,7 +6,7 @@ public class PlayerShoot : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.O))
         {
-            _ = ProjectilePoolManager.Instance.GetObject<Bullet>("BulletPool", transform.parent);
+            _ = ProjectilePoolManager.Instance.GetObject<Bullet>(PoolType.Bullet, transform.parent);
 
         }
     }

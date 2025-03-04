@@ -20,7 +20,7 @@ public class Bullet : MonoBehaviour
         
         if (timeToReturnPool >= 2f)
         {
-            ProjectilePoolManager.Instance.ReturnObject("BulletPool", this);
+            ProjectilePoolManager.Instance.ReturnObject(PoolType.Bullet, this);
         }
     }
 
@@ -37,7 +37,7 @@ public class Bullet : MonoBehaviour
             Destroy(collision.gameObject, 3f);
         }
 
-        ProjectilePoolManager.Instance.ReturnObject("BulletPool", this);
+        ProjectilePoolManager.Instance.ReturnObject(PoolType.Bullet, this);
     }
 
 }

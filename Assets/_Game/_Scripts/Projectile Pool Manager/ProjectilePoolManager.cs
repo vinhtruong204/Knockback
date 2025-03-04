@@ -1,69 +1,105 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class ProjectilePoolManager : MonoBehaviour
 {
+    // Singleton
     public static ProjectilePoolManager Instance { get; private set; }
 
-    [System.Serializable]
-    public class PoolConfig
-    {
-        public MonoBehaviour prefab;
-        public int poolSize;
-        public string poolName;
-    }
+    // Dictionary to store all the pools
+    [SerializeField] private Dictionary<PoolType, ObjectPoolGeneric<MonoBehaviour>> poolsDictionary;
 
-    public List<PoolConfig> poolConfigs;
-    private Dictionary<string, ObjectPoolGeneric<MonoBehaviour>> poolsDictionary;
-
-    private void Awake()
+    private async void Awake()
     {
         Instance = this;
-        poolsDictionary = new Dictionary<string, ObjectPoolGeneric<MonoBehaviour>>();
+        poolsDictionary = new Dictionary<PoolType, ObjectPoolGeneric<MonoBehaviour>>();
 
-        SetupProjectilePools();
+        await SetupProjectilePools();
     }
 
-    private void SetupProjectilePools()
+    /// <summary>
+    /// Setup the pools.
+    /// </summary>
+    /// <returns></returns>
+    private async Task SetupProjectilePools()
     {
-        foreach (PoolConfig config in poolConfigs)
+        // Create a pool for each projectile type
+        foreach (PoolType poolType in System.Enum.GetValues(typeof(PoolType)))
         {
-            string poolName = string.IsNullOrEmpty(config.poolName) ? config.prefab.name + "Pool" : config.poolName;
-            Transform spawnParent = transform.Find(poolName);
+            // Load the PoolConfigSO for the projectile type
+            string poolConfigAddress = poolType.ToString();
+            var (asset, handle) = await AddressableLoader<PoolConfigSO>.LoadAssetAsync(poolConfigAddress);
 
-            // If the parent doesn't exist, create a new one
-            if (spawnParent == null)
+            if (asset != null)
             {
-                spawnParent = new GameObject(poolName).transform;
-                spawnParent.SetParent(transform);
-            }
+                GetTransformToSpawn(poolType, out Transform spawnTransform);
 
-            ObjectPoolGeneric<MonoBehaviour> pool = new(config.prefab, config.poolSize, spawnParent);
-            poolsDictionary.Add(poolName, pool);
+                // Create the pool
+                ObjectPoolGeneric<MonoBehaviour> pool = new(asset.prefab, asset.poolSize, spawnTransform);
+                poolsDictionary.Add(poolType, pool);
+            }
+            else
+            {
+                Debug.LogWarning("PoolConfigSO for " + poolType + " not found.");
+            }
+            
+            // Release the handle
+            AddressableLoader<PoolConfigSO>.ReleaseHandle(handle);
         }
     }
 
-    public T GetObject<T>(string poolName, Transform transform) where T : MonoBehaviour
+    /// <summary>
+    /// Get the transform to spawn the projectile.
+    /// </summary>
+    /// <param name="poolType">Type of pool.</param>
+    /// <param name="spawnTransform">Position in hierachy to spawn.</param>
+    private void GetTransformToSpawn(PoolType poolType, out Transform spawnTransform)
     {
-        if (!poolsDictionary.ContainsKey(poolName))
+        spawnTransform = transform.Find(poolType.ToString() + "Pool");
+
+        if (spawnTransform == null)
         {
-            Debug.LogWarning("Pool with name " + poolName + " doesn't exist.");
+            Debug.LogWarning("Transform to spawn " + poolType + " not found. Creating a new one.");
+            spawnTransform = new GameObject(poolType.ToString() + "Pool").transform;
+            spawnTransform.SetParent(transform);
+        }
+    }
+
+    /// <summary>
+    /// Get an object from the pool.
+    /// </summary>
+    /// <typeparam name="T">Type of T is Monobehavior.</typeparam>
+    /// <param name="poolType">Type of pool want to get object.</param>
+    /// <param name="transform">Reset position with new transform.</param>
+    /// <returns>Object is returned from pool.</returns>
+    public T GetObject<T>(PoolType poolType, Transform transform) where T : MonoBehaviour
+    {
+        if (!poolsDictionary.ContainsKey(poolType))
+        {
+            Debug.LogWarning("Pool with name " + poolType + " doesn't exist.");
             return null;
         }
 
-        ObjectPoolGeneric<MonoBehaviour> pool = poolsDictionary[poolName];
+        ObjectPoolGeneric<MonoBehaviour> pool = poolsDictionary[poolType];
         MonoBehaviour obj = pool.GetObject(transform);
         return obj as T;
     }
 
-    public void ReturnObject<T>(string poolName, T obj) where T : MonoBehaviour
+    /// <summary>
+    /// Return an object to the pool.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="poolType"></param>
+    /// <param name="obj"></param>
+    public void ReturnObject<T>(PoolType poolType, T obj) where T : MonoBehaviour
     {
-        if (!poolsDictionary.ContainsKey(poolName))
+        if (!poolsDictionary.ContainsKey(poolType))
         {
-            Debug.LogWarning("Pool with name " + poolName + " doesn't exist.");
+            Debug.LogWarning("Pool with name " + poolType + " doesn't exist.");
             return;
         }
 
-        poolsDictionary[poolName].ReturnObject(obj);
+        poolsDictionary[poolType].ReturnObject(obj);
     }
 }

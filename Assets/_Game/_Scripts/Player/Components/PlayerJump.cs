@@ -53,7 +53,7 @@ public class PlayerJump : MonoBehaviour
         jumpCount++;
     }
 
-    void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
         {
