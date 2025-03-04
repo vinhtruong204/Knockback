@@ -1,13 +1,20 @@
+using System;
 using UnityEngine;
 
 public class PlayerShoot : MonoBehaviour
 {
-    void Update()
+    private void OnEnable()
     {
-        if (Input.GetKeyDown(KeyCode.O))
-        {
-            _ = ProjectilePoolManager.Instance.GetObject<Bullet>(PoolType.Bullet, transform.parent);
+        PlayerInputHandler.OnShoot += OnShoot;
+    }
 
-        }
+    private void OnShoot()
+    {
+        _ = ProjectilePoolManager.Instance.GetObject<Bullet>(PoolType.Bullet, transform.parent);
+    }
+
+    private void OnDisable()
+    {
+        PlayerInputHandler.OnShoot -= OnShoot;
     }
 }

@@ -8,10 +8,12 @@ public class PlayerInputHandler : MonoBehaviour
     private PlayerInput playerInput;
     private InputAction moveInputAction;
     private InputAction jumpInputAction;
+    private InputAction shootInputAction;
 
-    // Move event
+    // Events
     public static event Action<Vector2> OnMove;
     public static event Action OnJump;
+    public static event Action OnShoot;
 
     private void OnEnable()
     {
@@ -19,6 +21,7 @@ public class PlayerInputHandler : MonoBehaviour
         playerInput = GetComponent<PlayerInput>();
         moveInputAction = playerInput.actions["Move"];
         jumpInputAction = playerInput.actions["Jump"];
+        shootInputAction = playerInput.actions["Attack"];
 
         // Check if the input action is null
         if (jumpInputAction != null)
@@ -31,8 +34,7 @@ public class PlayerInputHandler : MonoBehaviour
             Debug.LogError("Jump input action not found!");
         }
 
-
-
+        // Check if the input action is null
         if (moveInputAction != null)
         {
             // Subscribe to input events
@@ -44,6 +46,20 @@ public class PlayerInputHandler : MonoBehaviour
             Debug.LogError("Move input action not found!");
         }
 
+        if (shootInputAction != null)
+        {
+            shootInputAction.performed += OnShootInput;
+        }
+        else
+        {
+            Debug.LogError("Shoot(Attack) input action not found!");
+        }
+
+    }
+
+    private void OnShootInput(InputAction.CallbackContext context)
+    {
+        OnShoot?.Invoke();
     }
 
     private void OnJumpInput(InputAction.CallbackContext context)
@@ -69,6 +85,11 @@ public class PlayerInputHandler : MonoBehaviour
         {
             moveInputAction.performed -= OnMoveInput;
             moveInputAction.canceled -= OnMoveInput;
+        }
+
+        if (shootInputAction != null)
+        {
+            shootInputAction.performed -= OnShootInput;
         }
     }
 }

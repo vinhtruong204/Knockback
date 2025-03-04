@@ -21,7 +21,7 @@ MonoBehaviour:
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 88dde1e6cfd9cd141bc66571f7940114
-    m_Address: BulletPoolConfig
+    m_Address: Bullet
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
@@ -31,12 +31,12 @@ MonoBehaviour:
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: a5cb81797cca6674488cb6f3bc3e9dcb
-    m_Address: RocketPoolConfig
+    m_Address: Rocket
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: ae0b4abc21bdb944aaaae9aa5899e8d7
-    m_Address: GrenadePoolConfig
+    m_Address: Grenade
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
