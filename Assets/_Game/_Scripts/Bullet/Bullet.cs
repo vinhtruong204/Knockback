@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class Bullet : MonoBehaviour
+public class Bullet : MonoBehaviour, IDisableAfterTime
 {
     [SerializeField] private float _speed = 10f;
     private Vector2 _moveDirection;
@@ -15,7 +15,7 @@ public class Bullet : MonoBehaviour
         StartCoroutine(DisableAfterTime());
     }
 
-    private IEnumerator DisableAfterTime()
+    public IEnumerator DisableAfterTime()
     {
         yield return new WaitForSeconds(_timeToReturnPoolMax);
         ProjectilePoolManager.Instance.ReturnObject(PoolType.Bullet, this);

@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b95186d6db267b4f9d3e8ad2a82cba7, type: 3}
   m_Name: Grenade
   m_EditorClassIdentifier: 
-  prefab: {fileID: 335911043744726707, guid: 94dc6ee312c912349a659edf3d0456af, type: 3}
+  prefab: {fileID: 477872202216595381, guid: bd641c00580cc944d82876b409de140b, type: 3}
   poolSize: 3

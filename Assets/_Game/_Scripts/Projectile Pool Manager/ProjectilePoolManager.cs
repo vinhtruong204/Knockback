@@ -8,7 +8,7 @@ public class ProjectilePoolManager : MonoBehaviour
     public static ProjectilePoolManager Instance { get; private set; }
 
     // Dictionary to store all the pools
-    [SerializeField] private Dictionary<PoolType, ObjectPoolGeneric<MonoBehaviour>> poolsDictionary;
+    private Dictionary<PoolType, ObjectPoolGeneric<MonoBehaviour>> poolsDictionary;
 
     private async void Awake()
     {

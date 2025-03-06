@@ -9,30 +9,33 @@ public class PlayerInputHandler : MonoBehaviour
     private InputAction moveInputAction;
     private InputAction jumpInputAction;
     private InputAction shootInputAction;
+    private InputAction throwBombInputAction;
 
     // Events
     public static event Action<Vector2> OnMove;
     public static event Action OnJump;
     public static event Action OnShoot;
+    public static event Action OnThrowBomb;
+
+    private float time;
 
     private void OnEnable()
     {
         // Get input action
         playerInput = GetComponent<PlayerInput>();
-        moveInputAction = playerInput.actions["Move"];
-        jumpInputAction = playerInput.actions["Jump"];
-        shootInputAction = playerInput.actions["Attack"];
 
-        // Check if the input action is null
-        if (jumpInputAction != null)
-        {
-            // Subscribe to input events
-            jumpInputAction.performed += OnJumpInput;
-        }
-        else
-        {
-            Debug.LogError("Jump input action not found!");
-        }
+        InitialMoveInputAction();
+
+        InitialJumpInputAction();
+
+        InitialShootInputAction();
+
+        InitialThrowBombInputAction();
+    }
+
+    private void InitialMoveInputAction()
+    {
+        moveInputAction = playerInput.actions["Move"];
 
         // Check if the input action is null
         if (moveInputAction != null)
@@ -45,16 +48,69 @@ public class PlayerInputHandler : MonoBehaviour
         {
             Debug.LogError("Move input action not found!");
         }
+    }
 
+    private void InitialJumpInputAction()
+    {
+        jumpInputAction = playerInput.actions["Jump"];
+        // Check if the input action is null
+        if (jumpInputAction != null)
+        {
+            // Subscribe to input events
+            jumpInputAction.performed += OnJumpInput;
+        }
+        else
+        {
+            Debug.LogError("Jump input action not found!");
+        }
+    }
+
+    private void InitialShootInputAction()
+    {
+        shootInputAction = playerInput.actions["Shoot"];
+        // Check if the input action is null
         if (shootInputAction != null)
         {
+            // Subscribe to input events
             shootInputAction.performed += OnShootInput;
         }
         else
         {
-            Debug.LogError("Shoot(Attack) input action not found!");
+            Debug.LogError("Shoot input action not found!");
         }
+    }
 
+    private void InitialThrowBombInputAction()
+    {
+        throwBombInputAction = playerInput.actions["Throw Bomb"];
+        // Check if the input action is null
+        if (throwBombInputAction != null)
+        {
+            // Subscribe to input events
+            throwBombInputAction.started += OnThrowBombInputStarted;
+            throwBombInputAction.performed += OnThrowBombInputPerformed;
+            throwBombInputAction.canceled += OnThrowBombInputCanceled;
+        }
+        else
+        {
+            Debug.LogError("Throw Bomb input action not found!");
+        }
+    }
+
+    private void OnThrowBombInputCanceled(InputAction.CallbackContext context)
+    {
+        // TO DO: Send duration of the throw bomb input
+        
+    }
+
+    private void OnThrowBombInputStarted(InputAction.CallbackContext context)
+    {
+        time = Time.time;
+    }
+
+    private void OnThrowBombInputPerformed(InputAction.CallbackContext context)
+    {
+        OnThrowBomb?.Invoke();
     }
 
     private void OnShootInput(InputAction.CallbackContext context)
@@ -90,6 +146,13 @@ public class PlayerInputHandler : MonoBehaviour
         if (shootInputAction != null)
         {
             shootInputAction.performed -= OnShootInput;
+        }
+
+        if (throwBombInputAction != null)
+        {
+            throwBombInputAction.started -= OnThrowBombInputStarted;
+            throwBombInputAction.performed -= OnThrowBombInputPerformed;
+            throwBombInputAction.canceled -= OnThrowBombInputCanceled;
         }
     }
 }
