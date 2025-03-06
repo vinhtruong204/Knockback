@@ -14,6 +14,14 @@ public class PlayerJump : MonoBehaviour
         InitializeRigidbody();
     }
 
+
+    private void OnGrounded()
+    {
+        // Reset jump count when the player is grounded
+        
+        jumpCount = 0;
+    }
+
     private async Task LoadPlayerSettings()
     {
         var (asset, handle) = await AddressableLoader<PlayerJumpConfigSO>.LoadAssetAsync("PlayerJumpConfigSO");
@@ -26,6 +34,9 @@ public class PlayerJump : MonoBehaviour
     {
         // Subscribe to input events
         PlayerInputHandler.OnJump += OnJumpInput;
+
+        // Subscribe to ground check events
+        CheckOnGround.OnGrounded += OnGrounded;
     }
 
     private void InitializeRigidbody()
@@ -57,7 +68,7 @@ public class PlayerJump : MonoBehaviour
     {
         if (collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
         {
-            jumpCount = 0;
+            
         }
     }
 
@@ -65,5 +76,7 @@ public class PlayerJump : MonoBehaviour
     {
         // Unsubscribe from input events
         PlayerInputHandler.OnJump -= OnJumpInput;
+
+        CheckOnGround.OnGrounded -= OnGrounded;
     }
 }
