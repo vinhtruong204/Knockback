@@ -1,15 +1,16 @@
-using System;
 using UnityEngine;
 
 public class PlayerAnimation : MonoBehaviour
 {
     private Animator animator;
     private AnimationType currentAnimation;
-    [SerializeField] private bool isJumping;
+    private Rigidbody2D rb;
+    private bool isJumping;
 
     private void Awake()
     {
         animator = GetComponent<Animator>();
+        rb = GetComponentInParent<Rigidbody2D>();
 
         currentAnimation = AnimationType.Idle;
     }
@@ -26,18 +27,17 @@ public class PlayerAnimation : MonoBehaviour
     {
         isJumping = false;
 
-        // Reset the animation to idle when grounded
-        HandleMove(Vector2.zero);
+        // If the player is not moving, set to idle
+        AnimationType newAnimation = Mathf.Abs(rb.linearVelocityX) <= 0.1f ? AnimationType.Idle : currentAnimation;
+        UpdateAnimationType(newAnimation);
     }
 
     private void HandleJump()
     {
-        if (currentAnimation == AnimationType.Jump) return;
+        if (isJumping) return;
 
-        animator.CrossFade(AnimationType.Jump.ToString(), 0.35f, 0);
-
-        isJumping = true;
-        currentAnimation = AnimationType.Jump;
+        isJumping = true;   
+        UpdateAnimationType(AnimationType.Jump);
     }
 
     private void HandleMove(Vector2 vector)
@@ -48,10 +48,15 @@ public class PlayerAnimation : MonoBehaviour
         // If the player is not moving, set to idle
         AnimationType newAnimation = vector == Vector2.zero ? AnimationType.Idle : AnimationType.Run;
 
+        UpdateAnimationType(newAnimation);
+    }
+
+    private void UpdateAnimationType(AnimationType newAnimation)
+    {
         // Check if the new animation is the same as the current one
         if (currentAnimation == newAnimation) return;
 
-        animator.CrossFade(newAnimation.ToString(), 0.35f, 0);
+        animator.CrossFade(newAnimation.ToString(), 0.2f, 0);
         currentAnimation = newAnimation;
     }
 
