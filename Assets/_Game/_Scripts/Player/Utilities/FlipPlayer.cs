@@ -3,10 +3,13 @@ using UnityEngine;
 
 public class FlipPlayer : MonoBehaviour
 {
-    private void OnEnable()
+    private PlayerInputHandler playerInputHandler;
+    private void Start()
     {
+        playerInputHandler = transform.parent.GetComponentInChildren<PlayerInputHandler>();
+        
         // Subscribe to input events
-        PlayerInputHandler.OnMove += OnMoveInput;
+        playerInputHandler.OnMove += OnMoveInput;
     }
 
     private void OnMoveInput(Vector2 moveInput)
@@ -29,6 +32,6 @@ public class FlipPlayer : MonoBehaviour
     private void OnDisable()
     {
         // Unsubscribe from input events
-        PlayerInputHandler.OnMove -= OnMoveInput;
+        playerInputHandler.OnMove -= OnMoveInput;
     }
 }

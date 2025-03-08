@@ -3,7 +3,8 @@ using UnityEngine;
 
 public class PlayerJump : MonoBehaviour
 {
-    private PlayerJumpConfigSO _settings;
+    private PlayerInputHandler playerInputHandler;
+    private PlayerJumpConfigSO settings;
     private Rigidbody2D _rigidbody;
     private int jumpCount;
 
@@ -26,23 +27,25 @@ public class PlayerJump : MonoBehaviour
     {
         var (asset, handle) = await AddressableLoader<PlayerJumpConfigSO>.LoadAssetAsync("PlayerJumpConfigSO");
 
-        _settings = asset;
+        settings = asset;
         AddressableLoader<PlayerJumpConfigSO>.ReleaseHandle(handle);
     }
 
-    private void OnEnable()
+    private void Start()
     {
+        playerInputHandler = transform.parent.GetComponentInChildren<PlayerInputHandler>();
+
         // Subscribe to input events
-        PlayerInputHandler.OnJump += OnJumpInput;
+        playerInputHandler.OnJump += OnJumpInput;
 
         // Subscribe to ground check events
-        CheckOnGround.OnGrounded += OnGrounded;
+        CheckOnGround.LocalInstance.OnGrounded += OnGrounded;
     }
 
     private void InitializeRigidbody()
     {
         _rigidbody = GetComponentInParent<Rigidbody2D>();
-        _rigidbody.gravityScale = _settings.gravityScale;
+        _rigidbody.gravityScale = settings.gravityScale;
     }
 
     /// <summary>
@@ -58,9 +61,9 @@ public class PlayerJump : MonoBehaviour
     /// </summary>
     private void JumpPlayer()
     {
-        if (jumpCount >= _settings.maxJumps) return;
+        if (jumpCount >= settings.maxJumps) return;
 
-        _rigidbody.AddForce(Vector2.up * _settings.jumpForce, ForceMode2D.Impulse);
+        _rigidbody.AddForce(Vector2.up * settings.jumpForce, ForceMode2D.Impulse);
         jumpCount++;
     }
 
@@ -75,8 +78,8 @@ public class PlayerJump : MonoBehaviour
     private void OnDisable()
     {
         // Unsubscribe from input events
-        PlayerInputHandler.OnJump -= OnJumpInput;
+        playerInputHandler.OnJump -= OnJumpInput;
 
-        CheckOnGround.OnGrounded -= OnGrounded;
+        CheckOnGround.LocalInstance.OnGrounded -= OnGrounded;
     }
 }

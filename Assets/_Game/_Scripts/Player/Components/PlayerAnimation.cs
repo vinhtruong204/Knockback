@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class PlayerAnimation : MonoBehaviour
 {
+    private PlayerInputHandler playerInputHandler;
     private Animator animator;
     private AnimationType currentAnimation;
     private Rigidbody2D rb;
@@ -15,12 +16,14 @@ public class PlayerAnimation : MonoBehaviour
         currentAnimation = AnimationType.Idle;
     }
 
-    private void OnEnable()
+    private void Start()
     {
-        PlayerInputHandler.OnMove += HandleMove;
-        PlayerInputHandler.OnJump += HandleJump;
+        playerInputHandler = transform.parent.GetComponentInChildren<PlayerInputHandler>();
+        
+        playerInputHandler.OnMove += HandleMove;
+        playerInputHandler.OnJump += HandleJump;
 
-        CheckOnGround.OnGrounded += HandleGrounded;
+        CheckOnGround.LocalInstance.OnGrounded += HandleGrounded;
     }
 
     private void HandleGrounded()
@@ -62,10 +65,10 @@ public class PlayerAnimation : MonoBehaviour
 
     private void OnDisable()
     {
-        PlayerInputHandler.OnMove -= HandleMove;
-        PlayerInputHandler.OnJump -= HandleJump;
+        playerInputHandler.OnMove -= HandleMove;
+        playerInputHandler.OnJump -= HandleJump;
 
         // Unsubscribe from the event on ground
-        CheckOnGround.OnGrounded -= HandleGrounded;
+        CheckOnGround.LocalInstance.OnGrounded -= HandleGrounded;
     }
 }
