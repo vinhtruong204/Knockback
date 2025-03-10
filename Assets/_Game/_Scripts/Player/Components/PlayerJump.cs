@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class PlayerJump : MonoBehaviour
 {
+    private CheckOnGround checkOnGround;
     private PlayerInputHandler playerInputHandler;
     private PlayerJumpConfigSO settings;
     private Rigidbody2D _rigidbody;
@@ -39,7 +40,8 @@ public class PlayerJump : MonoBehaviour
         playerInputHandler.OnJump += OnJumpInput;
 
         // Subscribe to ground check events
-        CheckOnGround.LocalInstance.OnGrounded += OnGrounded;
+        checkOnGround = transform.parent.GetComponentInChildren<CheckOnGround>();
+        checkOnGround.OnGrounded += OnGrounded;
     }
 
     private void InitializeRigidbody()
@@ -80,6 +82,6 @@ public class PlayerJump : MonoBehaviour
         // Unsubscribe from input events
         playerInputHandler.OnJump -= OnJumpInput;
 
-        CheckOnGround.LocalInstance.OnGrounded -= OnGrounded;
+        checkOnGround.OnGrounded -= OnGrounded;
     }
 }
