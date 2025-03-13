@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
+    private PlayerInputHandler playerInputHandler;
     private PlayerMovementConfigSO _settings;
     private Rigidbody2D _rigidbody;
     private Vector2 moveInput;
@@ -30,10 +31,12 @@ public class PlayerMovement : MonoBehaviour
         _rigidbody.linearDamping = _settings.linearDamping;
     }
 
-    private void OnEnable()
+    private void Start()
     {
+        playerInputHandler = transform.parent.GetComponentInChildren<PlayerInputHandler>();
+        
         // Subscribe to input events
-        PlayerInputHandler.OnMove += OnMoveInput;
+        playerInputHandler.OnMove += OnMoveInput;
     }
 
     /// <summary>
@@ -74,6 +77,6 @@ public class PlayerMovement : MonoBehaviour
     private void OnDisable()
     {
         // Unsubscribe from input events
-        PlayerInputHandler.OnMove -= OnMoveInput;
+        playerInputHandler.OnMove -= OnMoveInput;
     }
 }

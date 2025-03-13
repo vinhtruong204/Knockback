@@ -1,9 +1,11 @@
 using System;
+using Unity.Netcode;
+using Unity.Services.Matchmaker.Models;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(PlayerInput))]
-public class PlayerInputHandler : MonoBehaviour
+public class PlayerInputHandler : NetworkBehaviour
 {
     private PlayerInput playerInput;
     private InputAction moveInputAction;
@@ -12,17 +14,25 @@ public class PlayerInputHandler : MonoBehaviour
     private InputAction throwBombInputAction;
 
     // Events
-    public static event Action<Vector2> OnMove;
-    public static event Action OnJump;
-    public static event Action OnShoot;
-    public static event Action OnThrowBomb;
+    public event Action<Vector2> OnMove;
+    public event Action OnJump;
+    public event Action OnShoot;
+    public event Action OnThrowBomb;
 
     private float time;
 
-    private void OnEnable()
+    public override void OnNetworkSpawn()
     {
-        // Get input action
         playerInput = GetComponent<PlayerInput>();
+
+        // Check if the player is the owner of this object
+        if (!IsOwner)
+        {
+            // Disable this script if not the owner
+            this.enabled = false;
+            playerInput.enabled = false;
+            return;
+        }
 
         InitialMoveInputAction();
 
@@ -53,6 +63,7 @@ public class PlayerInputHandler : MonoBehaviour
     private void InitialJumpInputAction()
     {
         jumpInputAction = playerInput.actions["Jump"];
+
         // Check if the input action is null
         if (jumpInputAction != null)
         {
@@ -68,6 +79,7 @@ public class PlayerInputHandler : MonoBehaviour
     private void InitialShootInputAction()
     {
         shootInputAction = playerInput.actions["Shoot"];
+
         // Check if the input action is null
         if (shootInputAction != null)
         {
@@ -83,6 +95,7 @@ public class PlayerInputHandler : MonoBehaviour
     private void InitialThrowBombInputAction()
     {
         throwBombInputAction = playerInput.actions["Throw Bomb"];
+
         // Check if the input action is null
         if (throwBombInputAction != null)
         {
@@ -100,7 +113,7 @@ public class PlayerInputHandler : MonoBehaviour
     private void OnThrowBombInputCanceled(InputAction.CallbackContext context)
     {
         // TO DO: Send duration of the throw bomb input
-        
+
     }
 
     private void OnThrowBombInputStarted(InputAction.CallbackContext context)
@@ -110,26 +123,32 @@ public class PlayerInputHandler : MonoBehaviour
 
     private void OnThrowBombInputPerformed(InputAction.CallbackContext context)
     {
+        if (!IsOwner) return;
         OnThrowBomb?.Invoke();
     }
 
     private void OnShootInput(InputAction.CallbackContext context)
     {
+        if (!IsOwner) return;
         OnShoot?.Invoke();
     }
 
     private void OnJumpInput(InputAction.CallbackContext context)
     {
+        if (!IsOwner) return;
         OnJump?.Invoke();
     }
 
     private void OnMoveInput(InputAction.CallbackContext context)
     {
+        if (!IsOwner) return;
         OnMove?.Invoke(context.ReadValue<Vector2>());
     }
 
     private void OnDisable()
     {
+        if (!IsOwner) return;
+
         // Unsubscribe from input events
         if (jumpInputAction != null)
         {

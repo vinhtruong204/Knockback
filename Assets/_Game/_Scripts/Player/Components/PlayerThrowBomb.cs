@@ -3,9 +3,12 @@ using UnityEngine;
 
 public class PlayerThrowBomb : MonoBehaviour
 {
-    private void OnEnable()
+    private PlayerInputHandler playerInputHandler;
+    private void Start()
     {
-        PlayerInputHandler.OnThrowBomb += ThrowBomb;
+        playerInputHandler = transform.parent.GetComponentInChildren<PlayerInputHandler>();
+        
+        playerInputHandler.OnThrowBomb += ThrowBomb;
     }
 
     private void ThrowBomb()
@@ -15,6 +18,6 @@ public class PlayerThrowBomb : MonoBehaviour
 
     private void OnDisable()
     {
-        PlayerInputHandler.OnThrowBomb -= ThrowBomb;
+        playerInputHandler.OnThrowBomb -= ThrowBomb;
     }
 }

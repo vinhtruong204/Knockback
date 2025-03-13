@@ -3,9 +3,14 @@ using UnityEngine;
 
 public class PlayerShoot : MonoBehaviour
 {
-    private void OnEnable()
+    private PlayerInputHandler playerInputHandler;
+
+    private void Start()
     {
-        PlayerInputHandler.OnShoot += OnShoot;
+        playerInputHandler = transform.parent.GetComponentInChildren<PlayerInputHandler>();
+        
+        // Subscribe to input events
+        playerInputHandler.OnShoot += OnShoot;
     }
 
     private void OnShoot()
@@ -15,6 +20,6 @@ public class PlayerShoot : MonoBehaviour
 
     private void OnDisable()
     {
-        PlayerInputHandler.OnShoot -= OnShoot;
+        playerInputHandler.OnShoot -= OnShoot;
     }
 }
