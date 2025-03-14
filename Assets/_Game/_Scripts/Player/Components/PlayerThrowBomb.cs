@@ -13,7 +13,7 @@ public class PlayerThrowBomb : MonoBehaviour
 
     private void ThrowBomb()
     {
-        _ = ProjectilePoolManager.Instance.GetObject<Grenade>(PoolType.Grenade, transform.parent);
+        // _ = ProjectilePoolManager.Instance.GetObject<Grenade>(PoolType.Grenade, transform.parent);
     }
 
     private void OnDisable()
