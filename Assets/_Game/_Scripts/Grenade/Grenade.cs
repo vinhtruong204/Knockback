@@ -28,6 +28,6 @@ public class Grenade : MonoBehaviour, IDisableAfterTime
     public IEnumerator DisableAfterTime()
     {
         yield return new WaitForSeconds(_timeToReturnPoolMax);
-        ProjectilePoolManager.Instance.ReturnObject(PoolType.Grenade, this);
+        // ProjectilePoolManager.Instance.ReturnObject(PoolType.Grenade, this);
     }
 }
