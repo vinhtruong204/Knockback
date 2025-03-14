@@ -22,7 +22,6 @@ public class PlayerShoot : NetworkBehaviour
 
     private void OnShoot()
     {
-        if (!IsOwner) return; // Only the owner can shoot
         RequestShootRpc(player.TeamId.Value);
     }
 
@@ -33,11 +32,10 @@ public class PlayerShoot : NetworkBehaviour
         bullet.transform.localScale = transform.parent.localScale;
 
         // Initialize bullet with owner and team ID
-        Bullet bulletScript = bullet.GetComponent<Bullet>();
-        bulletScript.Initialize(teamId, transform.parent.localScale);
+        bullet.GetComponent<Bullet>().Initialize(teamId, transform.parent.localScale);
 
         // Spawn the bullet on the network
-        // bullet.GetComponent<NetworkObject>().Spawn();
+        bullet.GetComponent<NetworkObject>().Spawn();
     }
 
     private void OnDisable()

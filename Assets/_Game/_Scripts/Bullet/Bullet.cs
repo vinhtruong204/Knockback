@@ -29,18 +29,17 @@ public class Bullet : NetworkBehaviour, IDisableAfterTime
     public IEnumerator DisableAfterTime()
     {
         yield return new WaitForSeconds(_timeToReturnPoolMax);
-        
-        NetworkObjectPool.Singleton.ReturnNetworkObject(GetComponent<NetworkObject>(), bulletPrefab);
+
+        if (IsServer) GetComponent<NetworkObject>().Despawn();
     }
 
     private void Update()
     {
-        transform.Translate(_moveDirection * _speed * Time.deltaTime);
+        transform.Translate(_speed * Time.deltaTime * _moveDirection);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-
         if (!IsServer) return; // Only server handles collisions
 
         // Check if we hit a player
@@ -53,16 +52,23 @@ public class Bullet : NetworkBehaviour, IDisableAfterTime
 
             // Apply damage to enemy
             hitPlayer.TakeDamage(10); // Example damage value
-            NetworkObjectPool.Singleton.ReturnNetworkObject(GetComponent<NetworkObject>(), bulletPrefab);
-            GetComponent<NetworkObject>().Despawn();
         }
 
-        // If it hits something with a Rigidbody2D (but not a player), apply force
-        if (collision.TryGetComponent(out Rigidbody2D rb))
+        // If it hits something with a Rigidbody2D, apply force
+        ApplyForceRpc(collision.GetComponent<NetworkObject>(), _moveDirection * _speed);
+
+        GetComponent<NetworkObject>().Despawn();
+    }
+
+    [Rpc(SendTo.ClientsAndHost)]
+    private void ApplyForceRpc(NetworkObjectReference objectRef, Vector2 force)
+    {
+        if (objectRef.TryGet(out NetworkObject networkObject))
         {
-            rb.AddForce(_moveDirection * _speed, ForceMode2D.Impulse);
-            NetworkObjectPool.Singleton.ReturnNetworkObject(GetComponent<NetworkObject>(), bulletPrefab);
-            GetComponent<NetworkObject>().Despawn();
+            if (networkObject.TryGetComponent(out Rigidbody2D rb))
+            {
+                rb.AddForce(force, ForceMode2D.Impulse);
+            }
         }
     }
 }
