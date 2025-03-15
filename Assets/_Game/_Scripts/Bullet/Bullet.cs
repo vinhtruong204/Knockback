@@ -51,11 +51,12 @@ public class Bullet : NetworkBehaviour, IDisableAfterTime
                 return;
 
             // Apply damage to enemy
-            hitPlayer.TakeDamage(10); // Example damage value
+            hitPlayer.TakeDamage(50); // Example damage value
         }
 
-        // If it hits something with a Rigidbody2D, apply force
-        ApplyForceRpc(collision.GetComponent<NetworkObject>(), _moveDirection * _speed);
+        if (collision.GetComponent<NetworkObject>().IsSpawned)
+            // If it hits something with a Rigidbody2D, apply force
+            ApplyForceRpc(collision.GetComponent<NetworkObject>(), _moveDirection * _speed);
 
         GetComponent<NetworkObject>().Despawn();
     }

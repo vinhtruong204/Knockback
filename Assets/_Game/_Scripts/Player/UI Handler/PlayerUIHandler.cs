@@ -7,6 +7,7 @@ using UnityEngine.UI;
 
 public class PlayerUIHandler : NetworkBehaviour
 {
+    private Player player;
     private PlayerInputHandler playerInputHandler;
     [SerializeField] private TextMeshProUGUI playerNameText;
     [SerializeField] private Slider healthSlider;
@@ -20,6 +21,12 @@ public class PlayerUIHandler : NetworkBehaviour
     private void Awake()
     {
         playerInputHandler = transform.parent.GetComponentInChildren<PlayerInputHandler>();
+        player = transform.parent.GetComponent<Player>();
+    }
+
+    private void OnHealthChanged(int obj)
+    {
+        healthSlider.value = (float)obj / 100;
     }
 
     public override void OnNetworkSpawn()
@@ -34,6 +41,8 @@ public class PlayerUIHandler : NetworkBehaviour
         {
             playerNameText.text = playerName.Value.ToString();
         }
+
+        player.HealthChanged += OnHealthChanged;
 
         // Subscribe to playerName changes
         playerName.OnValueChanged += OnPlayerNameChanged;
@@ -64,5 +73,8 @@ public class PlayerUIHandler : NetworkBehaviour
 
         // Unsubscribe from input events
         playerInputHandler.OnMove -= OnMoveInput;
+
+        // Unsubscribe from player events
+        player.HealthChanged -= OnHealthChanged;
     }
 }
