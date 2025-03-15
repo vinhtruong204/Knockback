@@ -64,7 +64,7 @@ public class NetworkObjectPool : NetworkBehaviour
     /// PooledPrefabInstanceHandler when the client receives a spawn message for a prefab that has been registered
     /// here.
     /// </remarks>
-    /// <param name="prefab"></param>
+    /// <param name="prefab">The prefab to spawn.</param>
     /// <param name="position">The position to spawn the object at.</param>
     /// <param name="rotation">The rotation to spawn the object with.</param>
     /// <returns></returns>
@@ -77,7 +77,7 @@ public class NetworkObjectPool : NetworkBehaviour
     }
 
     /// <summary>
-    /// Return an object to the pool (reset objects before returning).
+    /// Return an object to the pool (reset objects before returning)
     /// </summary>
     public void ReturnNetworkObject(NetworkObject networkObject, GameObject prefab)
     {
