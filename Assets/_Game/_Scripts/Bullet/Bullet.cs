@@ -5,19 +5,19 @@ using UnityEngine;
 public class Bullet : NetworkBehaviour, IDisableAfterTime
 {
     [SerializeField] private float _speed = 10f;
+    [SerializeField] private int damage = 50;
     private Vector2 _moveDirection;
     private float _timeToReturnPoolMax = 2f;
-    private int bulletTeamId; // Track the team this bullet belongs to
-    [SerializeField] GameObject bulletPrefab;
+    private int bulletTeamId;
 
-    private async void Start()
-    {
-        var (bulletPrefab, handlers) = await AddressableLoader<GameObject>.LoadAssetAsync("Bullet");
-
-        this.bulletPrefab = bulletPrefab;
-        AddressableLoader<GameObject>.ReleaseHandle(handlers);
-    }
-
+    /// <summary>
+    /// Initialize the bullet
+    /// </summary>
+    /// <remarks>
+    /// Only the server can call this method
+    /// </remarks>
+    /// <param name="teamId">The team this bullet belongs to</param>
+    /// <param name="scale">The scale of the bullet</param>
     public void Initialize(int teamId, Vector3 scale)
     {
         bulletTeamId = teamId;
@@ -42,21 +42,19 @@ public class Bullet : NetworkBehaviour, IDisableAfterTime
     {
         if (!IsServer) return; // Only server handles collisions
 
-        // Check if we hit a player
-        if (collision.TryGetComponent(out Player hitPlayer))
+        // Check if collsion with teamate
+        PlayerTeamId hitPlayer = collision.GetComponentInChildren<PlayerTeamId>();
+        if (hitPlayer == null || hitPlayer.TeamId == bulletTeamId) return;
+
+        // Check if collision with player
+        PlayerDamageReceiver hitPlayerHealth = collision.GetComponentInChildren<PlayerDamageReceiver>();
+        hitPlayerHealth.TakeDamage(damage);
+
+        // Check if collision with other player
+        if (collision.TryGetComponent(out NetworkObject networkObject) && networkObject.IsSpawned)
         {
-
-            // Ignore if it's a teammate
-            if (hitPlayer.TeamId.Value == bulletTeamId)
-                return;
-
-            // Apply damage to enemy
-            hitPlayer.TakeDamage(50); // Example damage value
+            ApplyForceRpc(networkObject, _moveDirection * _speed);
         }
-
-        if (collision.GetComponent<NetworkObject>().IsSpawned)
-            // If it hits something with a Rigidbody2D, apply force
-            ApplyForceRpc(collision.GetComponent<NetworkObject>(), _moveDirection * _speed);
 
         GetComponent<NetworkObject>().Despawn();
     }

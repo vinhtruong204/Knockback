@@ -7,12 +7,11 @@ using UnityEngine.UI;
 
 public class PlayerUIHandler : NetworkBehaviour
 {
-    private Player player;
+    private PlayerDamageReceiver playerDamageReceiver;
     private PlayerInputHandler playerInputHandler;
     [SerializeField] private TextMeshProUGUI playerNameText;
     [SerializeField] private Slider healthSlider;
 
-    [SerializeField]
     private NetworkVariable<FixedString64Bytes> playerName = new(
         default,
         NetworkVariableReadPermission.Everyone,
@@ -21,7 +20,7 @@ public class PlayerUIHandler : NetworkBehaviour
     private void Awake()
     {
         playerInputHandler = transform.parent.GetComponentInChildren<PlayerInputHandler>();
-        player = transform.parent.GetComponent<Player>();
+        playerDamageReceiver = transform.parent.GetComponentInChildren<PlayerDamageReceiver>();
     }
 
     private void OnHealthChanged(int obj)
@@ -32,9 +31,10 @@ public class PlayerUIHandler : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
+        
         if (IsOwner)
         {
-            playerName.Value = $"Duc Du {OwnerClientId}";
+            playerName.Value = $"Player{OwnerClientId}";
             playerNameText.text = playerName.Value.ToString();
         }
         else
@@ -42,7 +42,7 @@ public class PlayerUIHandler : NetworkBehaviour
             playerNameText.text = playerName.Value.ToString();
         }
 
-        player.HealthChanged += OnHealthChanged;
+        playerDamageReceiver.HealthChanged += OnHealthChanged;
 
         // Subscribe to playerName changes
         playerName.OnValueChanged += OnPlayerNameChanged;
@@ -75,6 +75,6 @@ public class PlayerUIHandler : NetworkBehaviour
         playerInputHandler.OnMove -= OnMoveInput;
 
         // Unsubscribe from player events
-        player.HealthChanged -= OnHealthChanged;
+        playerDamageReceiver.HealthChanged -= OnHealthChanged;
     }
 }

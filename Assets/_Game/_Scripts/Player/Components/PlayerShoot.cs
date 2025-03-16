@@ -5,13 +5,27 @@ public class PlayerShoot : NetworkBehaviour
 {
     private PlayerInputHandler playerInputHandler;
     [SerializeField] private GameObject bulletPrefab;
-    private Player player; // Reference to the Player script
+    private PlayerTeamId playerTeamId; // Reference to the Player script
+
+    private async void Awake()
+    {
+        // Load bullet prefab if prefab not assigned in editor
+        if (bulletPrefab == null)
+        {
+            Debug.LogWarning("Prefab not assigned. Loading bullet prefab...");
+            var (prefab, handle) = await AddressableLoader<GameObject>.LoadAssetAsync("Bullet");
+
+            bulletPrefab = prefab;
+            AddressableLoader<GameObject>.ReleaseHandle(handle);
+        }
+    }
 
     private void Start()
     {
         playerInputHandler = transform.parent.GetComponentInChildren<PlayerInputHandler>();
-        player = transform.parent.GetComponent<Player>(); // Get the Player script
-        if (player == null)
+        playerTeamId = transform.parent.GetComponentInChildren<PlayerTeamId>();
+
+        if (playerTeamId == null)
         {
             Debug.LogError("Player component not found on parent!");
         }
@@ -22,7 +36,7 @@ public class PlayerShoot : NetworkBehaviour
 
     private void OnShoot()
     {
-        RequestShootRpc(player.TeamId.Value);
+        RequestShootRpc(playerTeamId.TeamId);
     }
 
     [Rpc(SendTo.Server)]
