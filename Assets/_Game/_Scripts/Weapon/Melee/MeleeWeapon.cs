@@ -15,4 +15,9 @@ public class MeleeWeapon : WeaponBase
     {
         Debug.Log(Name + " swings and deals " + Damage + " damage!");
     }
+
+    public override bool CanAttack()
+    {
+        throw new System.NotImplementedException();
+    }
 }

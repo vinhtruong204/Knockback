@@ -3,10 +3,10 @@ using UnityEngine;
 
 public class PrimaryWeapon : WeaponBase, IFireable, IReloadable
 {
-    public int Ammo { get; private set; }
-    public int MaxAmmo { get; private set; }
-    public float FireRate { get; private set; }
-    public float ReloadTime { get; private set; }
+    public int Ammo { get; protected set; }
+    public int MaxAmmo { get; protected set; }
+    public float FireRate { get; protected set; }
+    public float ReloadTime { get; protected set; }
 
     private float lastFireTime;
 
@@ -14,8 +14,8 @@ public class PrimaryWeapon : WeaponBase, IFireable, IReloadable
     {
         MaxAmmo = 30;
         Ammo = MaxAmmo;
-        FireRate = 5f;
-        ReloadTime = 2.0f;
+        FireRate = 0.5f;
+        ReloadTime = 10.0f;
         lastFireTime = -FireRate;
 
         var (asset, handle) = await AddressableLoader<WeaponData>.LoadAssetAsync("AK47_Basic");
@@ -25,33 +25,29 @@ public class PrimaryWeapon : WeaponBase, IFireable, IReloadable
         AddressableLoader<WeaponData>.ReleaseHandle(handle);
     }
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.R)) Attack();
-    }
-
     public override void Attack()
     {
         Fire();
     }
 
+    public override bool CanAttack()
+    {
+        return Time.time - lastFireTime >= FireRate && Ammo > 0;
+    }
+
     public void Fire()
     {
-        if (Time.time - lastFireTime >= FireRate)
-        {
-            if (Ammo > 0)
-            {
-                Ammo -= 10;
-                lastFireTime = Time.time;
-                Debug.Log(Name + " fires! Ammo left: " + Ammo);
-                if (Ammo == 0) Reload();
-            }
-            else
-            {
-                Debug.Log(Name + " is out of ammo!");
-            }
-        }
+        if (!CanAttack()) return;
+
+        Ammo -= 1;
+        lastFireTime = Time.time;
+
+        Debug.Log($"{Name} fires! Ammo left: {Ammo}");
+
+        if (Ammo == 0)
+            Reload();
     }
+
 
     public void Reload()
     {

@@ -3,9 +3,11 @@ using UnityEngine;
 
 public class PlayerShoot : NetworkBehaviour
 {
-    private PlayerInputHandler playerInputHandler;
-    [SerializeField] private GameObject bulletPrefab;
     private PlayerTeamId playerTeamId; // Reference to the Player script
+    
+    private PlayerInputHandler playerInputHandler;
+    private WeaponManager weaponManager;
+    [SerializeField] private GameObject bulletPrefab;
 
     private async void Awake()
     {
@@ -18,6 +20,8 @@ public class PlayerShoot : NetworkBehaviour
             bulletPrefab = prefab;
             AddressableLoader<GameObject>.ReleaseHandle(handle);
         }
+
+        weaponManager = transform.parent.GetComponentInChildren<WeaponManager>();
     }
 
     private void Start()
@@ -36,12 +40,17 @@ public class PlayerShoot : NetworkBehaviour
 
     private void OnAttack()
     {
-        RequestShootRpc(playerTeamId.TeamId);
+        if (weaponManager.CurrentWeapon.CanAttack())
+        {
+            weaponManager.CurrentWeapon.Attack();
+            RequestShootRpc(playerTeamId.TeamId);
+        }
     }
 
     [Rpc(SendTo.Server)]
     private void RequestShootRpc(int teamId)
     {
+        // Get a bullet from the pool
         NetworkObject bullet = NetworkObjectPool.Singleton.GetNetworkObject(bulletPrefab, transform.GetChild(0).position, Quaternion.identity);
         bullet.transform.localScale = transform.parent.localScale;
 

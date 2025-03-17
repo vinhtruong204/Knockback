@@ -28,4 +28,9 @@ public class ThrowableWeapon : WeaponBase, IThrowable
     {
         Debug.Log(Name + " explodes after " + explosionDelay + " seconds, dealing " + damage + " damage in radius " + explosionRadius);
     }
+
+    public override bool CanAttack()
+    {
+        throw new System.NotImplementedException();
+    }
 }
