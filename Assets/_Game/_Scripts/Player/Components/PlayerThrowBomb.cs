@@ -8,16 +8,15 @@ public class PlayerThrowBomb : MonoBehaviour
     {
         playerInputHandler = transform.parent.GetComponentInChildren<PlayerInputHandler>();
         
-        playerInputHandler.OnThrowBomb += ThrowBomb;
+        playerInputHandler.OnThrow += ThrowBomb;
     }
 
     private void ThrowBomb()
     {
-        // _ = ProjectilePoolManager.Instance.GetObject<Grenade>(PoolType.Grenade, transform.parent);
     }
 
     private void OnDisable()
     {
-        playerInputHandler.OnThrowBomb -= ThrowBomb;
+        playerInputHandler.OnThrow -= ThrowBomb;
     }
 }

@@ -9,14 +9,14 @@ public class PlayerInputHandler : NetworkBehaviour
     private PlayerInput playerInput;
     private InputAction moveInputAction;
     private InputAction jumpInputAction;
-    private InputAction shootInputAction;
-    private InputAction throwBombInputAction;
+    private InputAction attackInputAction;
+    private InputAction throwInputAction;
 
     // Events
     public event Action<Vector2> OnMove;
     public event Action OnJump;
-    public event Action OnShoot;
-    public event Action OnThrowBomb;
+    public event Action OnAttack;
+    public event Action OnThrow;
 
     private float time;
 
@@ -37,7 +37,7 @@ public class PlayerInputHandler : NetworkBehaviour
 
         InitialJumpInputAction();
 
-        InitialShootInputAction();
+        InitialAttackInputAction();
 
         InitialThrowBombInputAction();
     }
@@ -75,61 +75,61 @@ public class PlayerInputHandler : NetworkBehaviour
         }
     }
 
-    private void InitialShootInputAction()
+    private void InitialAttackInputAction()
     {
-        shootInputAction = playerInput.actions["Shoot"];
+        attackInputAction = playerInput.actions["Attack"];
 
         // Check if the input action is null
-        if (shootInputAction != null)
+        if (attackInputAction != null)
         {
             // Subscribe to input events
-            shootInputAction.performed += OnShootInput;
+            attackInputAction.performed += OnAttackInput;
         }
         else
         {
-            Debug.LogError("Shoot input action not found!");
+            Debug.LogError("Attack input action not found!");
         }
     }
 
     private void InitialThrowBombInputAction()
     {
-        throwBombInputAction = playerInput.actions["Throw Bomb"];
+        throwInputAction = playerInput.actions["Throw"];
 
         // Check if the input action is null
-        if (throwBombInputAction != null)
+        if (throwInputAction != null)
         {
             // Subscribe to input events
-            throwBombInputAction.started += OnThrowBombInputStarted;
-            throwBombInputAction.performed += OnThrowBombInputPerformed;
-            throwBombInputAction.canceled += OnThrowBombInputCanceled;
+            throwInputAction.started += OnThrowInputStarted;
+            throwInputAction.performed += OnThrowInputPerformed;
+            throwInputAction.canceled += OnThrowInputCanceled;
         }
         else
         {
-            Debug.LogError("Throw Bomb input action not found!");
+            Debug.LogError("Throw input action not found!");
         }
     }
 
-    private void OnThrowBombInputCanceled(InputAction.CallbackContext context)
+    private void OnThrowInputCanceled(InputAction.CallbackContext context)
     {
         // TO DO: Send duration of the throw bomb input
 
     }
 
-    private void OnThrowBombInputStarted(InputAction.CallbackContext context)
+    private void OnThrowInputStarted(InputAction.CallbackContext context)
     {
         time = Time.time;
     }
 
-    private void OnThrowBombInputPerformed(InputAction.CallbackContext context)
+    private void OnThrowInputPerformed(InputAction.CallbackContext context)
     {
         if (!IsOwner) return;
-        OnThrowBomb?.Invoke();
+        OnThrow?.Invoke();
     }
 
-    private void OnShootInput(InputAction.CallbackContext context)
+    private void OnAttackInput(InputAction.CallbackContext context)
     {
         if (!IsOwner) return;
-        OnShoot?.Invoke();
+        OnAttack?.Invoke();
     }
 
     private void OnJumpInput(InputAction.CallbackContext context)
@@ -161,16 +161,16 @@ public class PlayerInputHandler : NetworkBehaviour
             moveInputAction.canceled -= OnMoveInput;
         }
 
-        if (shootInputAction != null)
+        if (attackInputAction != null)
         {
-            shootInputAction.performed -= OnShootInput;
+            attackInputAction.performed -= OnAttackInput;
         }
 
-        if (throwBombInputAction != null)
+        if (throwInputAction != null)
         {
-            throwBombInputAction.started -= OnThrowBombInputStarted;
-            throwBombInputAction.performed -= OnThrowBombInputPerformed;
-            throwBombInputAction.canceled -= OnThrowBombInputCanceled;
+            throwInputAction.started -= OnThrowInputStarted;
+            throwInputAction.performed -= OnThrowInputPerformed;
+            throwInputAction.canceled -= OnThrowInputCanceled;
         }
     }
 }
