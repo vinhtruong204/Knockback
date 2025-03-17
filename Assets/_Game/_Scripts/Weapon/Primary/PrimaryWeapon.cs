@@ -15,7 +15,7 @@ public class PrimaryWeapon : WeaponBase, IFireable, IReloadable
         MaxAmmo = 30;
         Ammo = MaxAmmo;
         FireRate = 0.5f;
-        ReloadTime = 10.0f;
+        ReloadTime = 2.0f;
         lastFireTime = -FireRate;
 
         var (asset, handle) = await AddressableLoader<WeaponData>.LoadAssetAsync("AK47_Basic");

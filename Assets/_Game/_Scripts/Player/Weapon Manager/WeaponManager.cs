@@ -33,7 +33,8 @@ public class WeaponManager : NetworkBehaviour
             return;
         }
 
-        dropdownChangeWeapon.AddOptions(Enum.GetNames(typeof(WeaponType)).ToList());
+        if (IsOwner)
+            dropdownChangeWeapon.AddOptions(Enum.GetNames(typeof(WeaponType)).ToList());
     }
 
     private void LoadRightHandTransform()
