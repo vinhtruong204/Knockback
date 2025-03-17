@@ -1,9 +1,14 @@
+using System;
+using System.Collections;
 using UnityEngine;
 
 public class PlayerAnimation : MonoBehaviour
 {
     private CheckOnGround checkOnGround;
     private PlayerInputHandler playerInputHandler;
+
+    public PrimaryWeapon reloadable;
+
     private Animator animator;
     private AnimationType currentAnimation;
     private Rigidbody2D rb;
@@ -27,6 +32,21 @@ public class PlayerAnimation : MonoBehaviour
         // Subscribe to the event on ground
         checkOnGround = transform.parent.GetComponentInChildren<CheckOnGround>();
         checkOnGround.OnGrounded += HandleGrounded;
+
+        // Subscribe to the event on reload
+        reloadable.OnReload += HandleReload;
+    }
+
+    private void HandleReload()
+    {
+        UpdateAnimationType(AnimationType.Reload);
+        StartCoroutine(ReloadCoroutine());
+    }
+
+    private IEnumerator ReloadCoroutine()
+    {
+        yield return new WaitForSeconds(reloadable.ReloadTime);
+        UpdateAnimationType(AnimationType.Idle);
     }
 
     private void HandleGrounded()
@@ -73,5 +93,8 @@ public class PlayerAnimation : MonoBehaviour
 
         // Unsubscribe from the event on ground
         checkOnGround.OnGrounded -= HandleGrounded;
+
+        // Unsubscribe from the event on reload
+        reloadable.OnReload -= HandleReload;
     }
 }

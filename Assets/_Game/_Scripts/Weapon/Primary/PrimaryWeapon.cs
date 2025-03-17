@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -8,6 +9,7 @@ public class PrimaryWeapon : WeaponBase, IFireable, IReloadable
     public float FireRate { get; protected set; }
     public float ReloadTime { get; protected set; }
 
+    public event Action OnReload;
     private float lastFireTime;
 
     private async void Awake()
@@ -51,6 +53,7 @@ public class PrimaryWeapon : WeaponBase, IFireable, IReloadable
 
     public void Reload()
     {
+        OnReload?.Invoke();
         StartCoroutine(ReloadCoroutine());
     }
 

@@ -1076,6 +1076,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f1b21a6aebbde24d8e9037e0badcb2b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  reloadable: {fileID: 6524548969873201690}
 --- !u!1 &3354019172910935847
 GameObject:
   m_ObjectHideFlags: 0
@@ -1917,7 +1918,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2857810753592575362}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 4.09276}
 --- !u!212 &3264552693160823906
 SpriteRenderer:
   m_ObjectHideFlags: 0

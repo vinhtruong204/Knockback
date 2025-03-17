@@ -42,7 +42,18 @@ public class WeaponManager : NetworkBehaviour
         if (rightHand != null) return;
 
         Debug.LogWarning("Right hand transform not assigned! Loading right hand transform...");
-        rightHand = GameObject.Find("batch_Right Hand_0").transform;
+
+        
+        // Get the animation transform
+        Transform animationTransform = transform.parent.Find("Animation");
+        if (animationTransform == null)
+        {
+            Debug.LogError("Animation transform not found! Please assign the right hand transform in the inspector.");
+            return;
+        }
+
+        // Get the right hand transform
+        rightHand = animationTransform.Find("Hand").GetChild(1);
 
         if (rightHand == null)
         {

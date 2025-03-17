@@ -1,7 +1,8 @@
 using System.Collections;
+using Unity.Netcode;
 using UnityEngine;
 
-public class Grenade : MonoBehaviour, IDisableAfterTime
+public class Grenade : NetworkBehaviour, IDisableAfterTime
 {
     private float _timeToReturnPoolMax = 2f;
     private float _force = 5f;
@@ -14,8 +15,6 @@ public class Grenade : MonoBehaviour, IDisableAfterTime
 
     void OnEnable()
     {
-        Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("Grenade"), true);
-        
         // Add force to the grenade in the direction it is facing
         if (transform.localScale.x < 0f)
             _rb.AddForce(Vector2.left * _force, ForceMode2D.Impulse);
