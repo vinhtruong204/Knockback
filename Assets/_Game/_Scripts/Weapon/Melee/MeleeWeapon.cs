@@ -5,11 +5,10 @@ public class MeleeWeapon : WeaponBase
     public int Damage { get; private set; }
     public float AttackSpeed { get; private set; }
 
-    public MeleeWeapon(string name, int damage, float attackSpeed, float weight, GameObject model)
-        : base(name, WeaponType.Melee, weight, model)
+    private void Awake()
     {
-        Damage = damage;
-        AttackSpeed = attackSpeed;
+        Damage = 10;
+        AttackSpeed = 1.0f;
     }
 
     public override void Attack()

@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class PrimaryWeapon : WeaponBase, IFireable, IReloadable
@@ -9,14 +10,24 @@ public class PrimaryWeapon : WeaponBase, IFireable, IReloadable
 
     private float lastFireTime;
 
-    public PrimaryWeapon(string name, int maxAmmo, float fireRate, float reloadTime, float weight, GameObject model) 
-        : base(name, WeaponType.Primary, weight, model)
+    private async void Awake()
     {
-        MaxAmmo = maxAmmo;
-        Ammo = maxAmmo;
-        FireRate = fireRate;
-        ReloadTime = reloadTime;
-        lastFireTime = -fireRate;
+        MaxAmmo = 30;
+        Ammo = MaxAmmo;
+        FireRate = 5f;
+        ReloadTime = 2.0f;
+        lastFireTime = -FireRate;
+
+        var (asset, handle) = await AddressableLoader<WeaponData>.LoadAssetAsync("AK47_Basic");
+
+        Init(asset);
+
+        AddressableLoader<WeaponData>.ReleaseHandle(handle);
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.R)) Attack();
     }
 
     public override void Attack()
@@ -30,9 +41,10 @@ public class PrimaryWeapon : WeaponBase, IFireable, IReloadable
         {
             if (Ammo > 0)
             {
-                Ammo--;
+                Ammo -= 10;
                 lastFireTime = Time.time;
                 Debug.Log(Name + " fires! Ammo left: " + Ammo);
+                if (Ammo == 0) Reload();
             }
             else
             {
@@ -43,6 +55,12 @@ public class PrimaryWeapon : WeaponBase, IFireable, IReloadable
 
     public void Reload()
     {
+        StartCoroutine(ReloadCoroutine());
+    }
+
+    private IEnumerator ReloadCoroutine()
+    {
+        yield return new WaitForSeconds(ReloadTime);
         Ammo = MaxAmmo;
         Debug.Log(Name + " reloaded!");
     }
