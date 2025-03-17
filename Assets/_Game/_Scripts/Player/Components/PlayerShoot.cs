@@ -31,10 +31,10 @@ public class PlayerShoot : NetworkBehaviour
         }
 
         // Subscribe to input events
-        playerInputHandler.OnShoot += OnShoot;
+        playerInputHandler.OnAttack += OnAttack;
     }
 
-    private void OnShoot()
+    private void OnAttack()
     {
         RequestShootRpc(playerTeamId.TeamId);
     }
@@ -55,6 +55,6 @@ public class PlayerShoot : NetworkBehaviour
     private void OnDisable()
     {
         if (playerInputHandler != null)
-            playerInputHandler.OnShoot -= OnShoot;
+            playerInputHandler.OnAttack -= OnAttack;
     }
 }
