@@ -40,6 +40,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e819a00973f8c3f41bed8fcd33a6ec8e
+    m_Address: AK47_Basic
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: ee8b996c6b9f40b439ff431a1f83ead9
     m_Address: PlayerSettings
     m_ReadOnly: 0

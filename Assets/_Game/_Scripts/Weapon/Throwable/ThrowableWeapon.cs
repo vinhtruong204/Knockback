@@ -6,12 +6,11 @@ public class ThrowableWeapon : WeaponBase, IThrowable
     private float explosionRadius;
     private int damage;
 
-    public ThrowableWeapon(string name, float explosionDelay, float explosionRadius, int damage, float weight, GameObject model)
-        : base(name, WeaponType.Throwable, weight, model)
+    private void Awake()
     {
-        this.explosionDelay = explosionDelay;
-        this.explosionRadius = explosionRadius;
-        this.damage = damage;
+        explosionDelay = 2f;
+        explosionRadius = 2f;
+        damage = 10;
     }
 
     public override void Attack()
@@ -28,5 +27,10 @@ public class ThrowableWeapon : WeaponBase, IThrowable
     private void Explode()
     {
         Debug.Log(Name + " explodes after " + explosionDelay + " seconds, dealing " + damage + " damage in radius " + explosionRadius);
+    }
+
+    public override bool CanAttack()
+    {
+        throw new System.NotImplementedException();
     }
 }

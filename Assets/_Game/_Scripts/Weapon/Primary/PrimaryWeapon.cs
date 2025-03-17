@@ -1,22 +1,28 @@
+using System.Collections;
 using UnityEngine;
 
 public class PrimaryWeapon : WeaponBase, IFireable, IReloadable
 {
-    public int Ammo { get; private set; }
-    public int MaxAmmo { get; private set; }
-    public float FireRate { get; private set; }
-    public float ReloadTime { get; private set; }
+    public int Ammo { get; protected set; }
+    public int MaxAmmo { get; protected set; }
+    public float FireRate { get; protected set; }
+    public float ReloadTime { get; protected set; }
 
     private float lastFireTime;
 
-    public PrimaryWeapon(string name, int maxAmmo, float fireRate, float reloadTime, float weight, GameObject model) 
-        : base(name, WeaponType.Primary, weight, model)
+    private async void Awake()
     {
-        MaxAmmo = maxAmmo;
-        Ammo = maxAmmo;
-        FireRate = fireRate;
-        ReloadTime = reloadTime;
-        lastFireTime = -fireRate;
+        MaxAmmo = 30;
+        Ammo = MaxAmmo;
+        FireRate = 0.5f;
+        ReloadTime = 10.0f;
+        lastFireTime = -FireRate;
+
+        var (asset, handle) = await AddressableLoader<WeaponData>.LoadAssetAsync("AK47_Basic");
+
+        Init(asset);
+
+        AddressableLoader<WeaponData>.ReleaseHandle(handle);
     }
 
     public override void Attack()
@@ -24,25 +30,33 @@ public class PrimaryWeapon : WeaponBase, IFireable, IReloadable
         Fire();
     }
 
+    public override bool CanAttack()
+    {
+        return Time.time - lastFireTime >= FireRate && Ammo > 0;
+    }
+
     public void Fire()
     {
-        if (Time.time - lastFireTime >= FireRate)
-        {
-            if (Ammo > 0)
-            {
-                Ammo--;
-                lastFireTime = Time.time;
-                Debug.Log(Name + " fires! Ammo left: " + Ammo);
-            }
-            else
-            {
-                Debug.Log(Name + " is out of ammo!");
-            }
-        }
+        if (!CanAttack()) return;
+
+        Ammo -= 1;
+        lastFireTime = Time.time;
+
+        Debug.Log($"{Name} fires! Ammo left: {Ammo}");
+
+        if (Ammo == 0)
+            Reload();
     }
+
 
     public void Reload()
     {
+        StartCoroutine(ReloadCoroutine());
+    }
+
+    private IEnumerator ReloadCoroutine()
+    {
+        yield return new WaitForSeconds(ReloadTime);
         Ammo = MaxAmmo;
         Debug.Log(Name + " reloaded!");
     }
