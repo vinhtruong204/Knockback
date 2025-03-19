@@ -9,15 +9,15 @@ public class PrimaryWeapon : WeaponBase, IFireable, IReloadable
     public float FireRate { get; protected set; }
     public float ReloadTime { get; protected set; }
 
-    public event Action OnReload;
+    public event Action<float> OnReload;
     private float lastFireTime;
 
     private async void Awake()
     {
         MaxAmmo = 30;
         Ammo = MaxAmmo;
-        FireRate = 0.5f;
-        ReloadTime = 2.0f;
+        FireRate = 0.1f;
+        ReloadTime = 1.0f;
         lastFireTime = -FireRate;
 
         var (asset, handle) = await AddressableLoader<WeaponData>.LoadAssetAsync("AK47_Basic");
@@ -53,7 +53,7 @@ public class PrimaryWeapon : WeaponBase, IFireable, IReloadable
 
     public void Reload()
     {
-        OnReload?.Invoke();
+        OnReload?.Invoke(ReloadTime);
         StartCoroutine(ReloadCoroutine());
     }
 

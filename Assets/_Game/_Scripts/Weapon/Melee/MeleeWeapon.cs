@@ -18,6 +18,6 @@ public class MeleeWeapon : WeaponBase
 
     public override bool CanAttack()
     {
-        throw new System.NotImplementedException();
+        return true;
     }
 }

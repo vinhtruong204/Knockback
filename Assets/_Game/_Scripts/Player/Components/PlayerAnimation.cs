@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerAnimation : MonoBehaviour
@@ -7,7 +8,8 @@ public class PlayerAnimation : MonoBehaviour
     private CheckOnGround checkOnGround;
     private PlayerInputHandler playerInputHandler;
 
-    public PrimaryWeapon reloadable;
+    // 
+    [SerializeField] private Transform rightHand; // Right hand hold the weapons
 
     private Animator animator;
     private AnimationType currentAnimation;
@@ -25,7 +27,7 @@ public class PlayerAnimation : MonoBehaviour
     private void Start()
     {
         playerInputHandler = transform.parent.GetComponentInChildren<PlayerInputHandler>();
-        
+
         playerInputHandler.OnMove += HandleMove;
         playerInputHandler.OnJump += HandleJump;
 
@@ -34,18 +36,25 @@ public class PlayerAnimation : MonoBehaviour
         checkOnGround.OnGrounded += HandleGrounded;
 
         // Subscribe to the event on reload
-        reloadable.OnReload += HandleReload;
+        for (int i = 0; i < rightHand.childCount; i++)
+        {
+            WeaponBase child = rightHand.GetChild(i).GetComponent<WeaponBase>();
+            if (child is IReloadable)
+            {
+                (child as IReloadable).OnReload += HandleReload;
+            }
+        }
     }
 
-    private void HandleReload()
+    private void HandleReload(float reloadTime)
     {
         UpdateAnimationType(AnimationType.Reload);
-        StartCoroutine(ReloadCoroutine());
+        StartCoroutine(ReloadCoroutine(reloadTime));
     }
 
-    private IEnumerator ReloadCoroutine()
+    private IEnumerator ReloadCoroutine(float reloadTime)
     {
-        yield return new WaitForSeconds(reloadable.ReloadTime);
+        yield return new WaitForSeconds(reloadTime);
         UpdateAnimationType(AnimationType.Idle);
     }
 
@@ -62,7 +71,7 @@ public class PlayerAnimation : MonoBehaviour
     {
         if (isJumping) return;
 
-        isJumping = true;   
+        isJumping = true;
         UpdateAnimationType(AnimationType.Jump);
     }
 
@@ -95,6 +104,13 @@ public class PlayerAnimation : MonoBehaviour
         checkOnGround.OnGrounded -= HandleGrounded;
 
         // Unsubscribe from the event on reload
-        reloadable.OnReload -= HandleReload;
+        for (int i = 0; i < rightHand.childCount; i++)
+        {
+            WeaponBase child = rightHand.GetChild(i).GetComponent<WeaponBase>();
+            if (child is IReloadable)
+            {
+                (child as IReloadable).OnReload += HandleReload;
+            }
+        }
     }
 }

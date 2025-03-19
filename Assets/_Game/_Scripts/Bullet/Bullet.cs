@@ -5,7 +5,7 @@ using UnityEngine;
 public class Bullet : NetworkBehaviour, IDisableAfterTime
 {
     [SerializeField] private float _speed = 10f;
-    [SerializeField] private int damage = 50;
+    [SerializeField] private int damage = 10;
     private Vector2 _moveDirection;
     private float _timeToReturnPoolMax = 2f;
     private int bulletTeamId;

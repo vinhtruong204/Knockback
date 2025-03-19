@@ -31,6 +31,6 @@ public class ThrowableWeapon : WeaponBase, IThrowable
 
     public override bool CanAttack()
     {
-        throw new System.NotImplementedException();
+        return true;
     }
 }

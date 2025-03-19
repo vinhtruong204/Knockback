@@ -322,7 +322,7 @@ GameObject:
   - component: {fileID: 2386264505397580418}
   - component: {fileID: 2046643434538134110}
   - component: {fileID: 1439029044857714352}
-  - component: {fileID: 154824022859547631}
+  - component: {fileID: 431868630424199748}
   m_Layer: 3
   m_Name: Player
   m_TagString: Untagged
@@ -526,7 +526,7 @@ MonoBehaviour:
   UseRigidBodyForMotion: 1
   AutoUpdateKinematicState: 1
   AutoSetKinematicOnDespawn: 1
---- !u!114 &154824022859547631
+--- !u!114 &431868630424199748
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1076,7 +1076,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f1b21a6aebbde24d8e9037e0badcb2b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  reloadable: {fileID: 6524548969873201690}
+  rightHand: {fileID: 2857810753592575362}
 --- !u!1 &3354019172910935847
 GameObject:
   m_ObjectHideFlags: 0
@@ -1918,7 +1918,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2857810753592575362}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 4.09276}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 4.68}
 --- !u!212 &3264552693160823906
 SpriteRenderer:
   m_ObjectHideFlags: 0

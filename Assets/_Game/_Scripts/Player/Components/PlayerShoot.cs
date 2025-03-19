@@ -4,7 +4,7 @@ using UnityEngine;
 public class PlayerShoot : NetworkBehaviour
 {
     private PlayerTeamId playerTeamId; // Reference to the Player script
-    
+
     private PlayerInputHandler playerInputHandler;
     private WeaponManager weaponManager;
     [SerializeField] private GameObject bulletPrefab;
@@ -40,9 +40,12 @@ public class PlayerShoot : NetworkBehaviour
 
     private void OnAttack()
     {
-        if (weaponManager.CurrentWeapon.CanAttack())
+        if (!weaponManager.CurrentWeapon.CanAttack()) return;
+
+        weaponManager.CurrentWeapon.Attack();
+
+        if (weaponManager.CurrentWeapon is IFireable)
         {
-            weaponManager.CurrentWeapon.Attack();
             RequestShootRpc(playerTeamId.TeamId);
         }
     }

@@ -2,7 +2,7 @@ using System;
 
 public interface IReloadable
 {
-    event Action OnReload;
+    event Action<float> OnReload;
     float ReloadTime { get; }
     void Reload();
 }
