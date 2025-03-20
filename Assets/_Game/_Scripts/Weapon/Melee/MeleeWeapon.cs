@@ -1,6 +1,6 @@
 using System;
 using System.Collections;
-using Unity.Services.Lobbies.Models;
+using Unity.Netcode;
 using UnityEngine;
 
 public class MeleeWeapon : WeaponBase
@@ -12,7 +12,7 @@ public class MeleeWeapon : WeaponBase
     private float lastTimeAttack;
 
     private BoxCollider2D boxCollider2D;
-    
+
     [SerializeField] private PlayerTeamId playerTeamId;
 
     // Send event to update animation
@@ -27,12 +27,11 @@ public class MeleeWeapon : WeaponBase
         lastTimeAttack = -AttackSpeed;
 
         AttackDuration = 1.0f;
-
     }
 
     private void Start()
     {
-        GetTeamId();   
+        GetTeamId();
     }
 
     private void GetTeamId()
@@ -89,31 +88,49 @@ public class MeleeWeapon : WeaponBase
             PlayerTeamId hitPlayer = collision.GetComponentInChildren<PlayerTeamId>();
             if (hitPlayer == null || hitPlayer.TeamId == playerTeamId.TeamId) return;
 
-            HandleDamage(collision);
-
-            SendForceRpc(collision.transform, Damage * Vector2.right);
+            HandleDamageServerRpc(collision.GetComponent<NetworkObject>());
+            
+            // Attack direction
+            Vector2 attackDirection = playerTeamId.transform.parent.localScale.x > 0 ? Vector2.right : Vector2.left;
+            SendForceServerRpc(collision.GetComponent<NetworkObject>(), Damage * attackDirection);
         }
 
         boxCollider2D.enabled = false;
     }
 
-
-    private void SendForceRpc(Transform transform, Vector2 force)
+    [Rpc(SendTo.Server)]
+    private void SendForceServerRpc(NetworkObjectReference targetObject, Vector2 force)
     {
-        // throw new NotImplementedException();
+        if (targetObject.TryGet(out NetworkObject networkObject))
+        {
+            Rigidbody2D rb = networkObject.GetComponent<Rigidbody2D>();
+
+            if (rb != null)
+            {
+                rb.AddForce(force, ForceMode2D.Impulse);
+            }
+            else
+            {
+                Debug.Log("No Rigidbody2D found on " + networkObject.name);
+            }
+        }
     }
 
-    private void HandleDamage(Collider2D collision)
+    [Rpc(SendTo.Server)]
+    private void HandleDamageServerRpc(NetworkObjectReference targetObject)
     {
-        PlayerDamageReceiver playerHealth = collision.GetComponentInChildren<PlayerDamageReceiver>();
+        if (targetObject.TryGet(out NetworkObject networkObject))
+        {
+            PlayerDamageReceiver playerHealth = networkObject.GetComponentInChildren<PlayerDamageReceiver>();
 
-        if (playerHealth != null)
-        {
-            playerHealth.TakeDamage(Damage);
-        }
-        else
-        {
-            Debug.Log("No PlayerDamageReceiver found on " + collision.name);
+            if (playerHealth != null)
+            {
+                playerHealth.TakeDamage(Damage);
+            }
+            else
+            {
+                Debug.Log("No PlayerDamageReceiver found on " + networkObject.name);
+            }
         }
     }
 }

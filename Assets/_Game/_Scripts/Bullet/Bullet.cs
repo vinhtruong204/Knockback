@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class Bullet : NetworkBehaviour, IDisableAfterTime
 {
-    [SerializeField] private float _speed = 10f;
+    [SerializeField] private float speed = 10f;
     private int damage = 10;
-    private Vector2 _moveDirection;
-    private float _timeToReturnPoolMax = 2f;
+    private Vector2 moveDirection;
+    private float timeToReturnPool = 2f;
     private int bulletTeamId;
 
     /// <summary>
@@ -22,20 +22,20 @@ public class Bullet : NetworkBehaviour, IDisableAfterTime
     {
         bulletTeamId = teamId;
         transform.localScale = scale;
-        _moveDirection = transform.localScale.x < 0f ? Vector2.left : Vector2.right;
+        moveDirection = transform.localScale.x < 0f ? Vector2.left : Vector2.right;
         StartCoroutine(DisableAfterTime());
     }
 
     public IEnumerator DisableAfterTime()
     {
-        yield return new WaitForSeconds(_timeToReturnPoolMax);
+        yield return new WaitForSeconds(timeToReturnPool);
 
         if (IsServer) GetComponent<NetworkObject>().Despawn();
     }
 
     private void Update()
     {
-        transform.Translate(_speed * Time.deltaTime * _moveDirection);
+        transform.Translate(speed * Time.deltaTime * moveDirection);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -59,7 +59,7 @@ public class Bullet : NetworkBehaviour, IDisableAfterTime
         // Check if collision with other player
         if (collision.TryGetComponent(out NetworkObject networkObject) && networkObject.IsSpawned)
         {
-            ApplyForceRpc(networkObject, _moveDirection * _speed);
+            ApplyForceRpc(networkObject, moveDirection * speed);
         }
 
         GetComponent<NetworkObject>().Despawn();

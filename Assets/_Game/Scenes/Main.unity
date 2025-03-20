@@ -2637,7 +2637,9 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   PooledPrefabsList:
   - Prefab: {fileID: 1253894637964660339, guid: 94dc6ee312c912349a659edf3d0456af, type: 3}
-    PrewarmCount: 5
+    PrewarmCount: 10
+  - Prefab: {fileID: 6408521290080680589, guid: bd641c00580cc944d82876b409de140b, type: 3}
+    PrewarmCount: 3
 --- !u!4 &1826749722
 Transform:
   m_ObjectHideFlags: 0

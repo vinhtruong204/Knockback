@@ -6,7 +6,7 @@ public class PlayerJump : MonoBehaviour
     private CheckOnGround checkOnGround;
     private PlayerInputHandler playerInputHandler;
     private PlayerJumpConfigSO settings;
-    private Rigidbody2D _rigidbody;
+    private Rigidbody2D playerRigidbody;
     private int jumpCount;
 
     private async void Awake()
@@ -46,8 +46,8 @@ public class PlayerJump : MonoBehaviour
 
     private void InitializeRigidbody()
     {
-        _rigidbody = GetComponentInParent<Rigidbody2D>();
-        _rigidbody.gravityScale = settings.gravityScale;
+        playerRigidbody = GetComponentInParent<Rigidbody2D>();
+        playerRigidbody.gravityScale = settings.gravityScale;
     }
 
     /// <summary>
@@ -65,7 +65,7 @@ public class PlayerJump : MonoBehaviour
     {
         if (jumpCount >= settings.maxJumps) return;
 
-        _rigidbody.AddForce(Vector2.up * settings.jumpForce, ForceMode2D.Impulse);
+        playerRigidbody.AddForce(Vector2.up * settings.jumpForce, ForceMode2D.Impulse);
         jumpCount++;
     }
 

@@ -13,13 +13,13 @@ public class PlayerAnimation : MonoBehaviour
 
     private Animator animator;
     private AnimationType currentAnimation;
-    private Rigidbody2D rb;
+    private Rigidbody2D playerRigidbody;
     private bool isJumping;
 
     private void Awake()
     {
         animator = GetComponent<Animator>();
-        rb = GetComponentInParent<Rigidbody2D>();
+        playerRigidbody = GetComponentInParent<Rigidbody2D>();
 
         currentAnimation = AnimationType.Idle;
     }
@@ -83,7 +83,7 @@ public class PlayerAnimation : MonoBehaviour
         isJumping = false;
 
         // If the player is not moving, set to idle
-        AnimationType newAnimation = Mathf.Abs(rb.linearVelocityX) <= 0.1f ? AnimationType.Idle : currentAnimation;
+        AnimationType newAnimation = Mathf.Abs(playerRigidbody.linearVelocityX) <= 0.1f ? AnimationType.Idle : currentAnimation;
         UpdateAnimationType(newAnimation);
     }
 

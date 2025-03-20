@@ -5,8 +5,8 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     private PlayerInputHandler playerInputHandler;
-    private PlayerMovementConfigSO _settings;
-    private Rigidbody2D _rigidbody;
+    private PlayerMovementConfigSO settings;
+    private Rigidbody2D playerRigidbody;
     private Vector2 moveInput;
 
     private async void Awake()
@@ -20,15 +20,15 @@ public class PlayerMovement : MonoBehaviour
     {
         var (asset, handle) = await AddressableLoader<PlayerMovementConfigSO>.LoadAssetAsync("PlayerSettings");
 
-        _settings = asset;
+        settings = asset;
         AddressableLoader<PlayerMovementConfigSO>.ReleaseHandle(handle);
     }
 
 
     private void InitializeRigidbody()
     {
-        _rigidbody = GetComponentInParent<Rigidbody2D>();
-        _rigidbody.linearDamping = _settings.linearDamping;
+        playerRigidbody = GetComponentInParent<Rigidbody2D>();
+        playerRigidbody.linearDamping = settings.linearDamping;
     }
 
     private void Start()
@@ -60,17 +60,17 @@ public class PlayerMovement : MonoBehaviour
     {
         if (moveInput.magnitude <= 0.1f) return;
 
-        Vector2 targetVelocity = new(moveInput.x * _settings.moveSpeed, _rigidbody.linearVelocityY);
+        Vector2 targetVelocity = new(moveInput.x * settings.moveSpeed, playerRigidbody.linearVelocityY);
 
         // Calculate the force to apply
-        Vector2 force = new((targetVelocity.x - _rigidbody.linearVelocityX) * _settings.acceleration, 0);
+        Vector2 force = new((targetVelocity.x - playerRigidbody.linearVelocityX) * settings.acceleration, 0);
 
-        _rigidbody.AddForce(force, ForceMode2D.Force);
+        playerRigidbody.AddForce(force, ForceMode2D.Force);
 
         // Clamp the velocity to the max speed
-        if (Mathf.Abs(_rigidbody.linearVelocityX) > _settings.maxSpeed)
+        if (Mathf.Abs(playerRigidbody.linearVelocityX) > settings.maxSpeed)
         {
-            _rigidbody.linearVelocity = new(Mathf.Sign(_rigidbody.linearVelocityX) * _settings.maxSpeed, _rigidbody.linearVelocityY);
+            playerRigidbody.linearVelocity = new(Mathf.Sign(playerRigidbody.linearVelocityX) * settings.maxSpeed, playerRigidbody.linearVelocityY);
         }
     }
 
