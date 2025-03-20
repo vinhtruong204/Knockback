@@ -21,6 +21,8 @@ public class WeaponManager : NetworkBehaviour
     private void Start()
     {
         LoadRightHandTransform();
+
+        EnableCurrentWeapon();
     }
 
     private void LoadDropdown()
@@ -33,7 +35,8 @@ public class WeaponManager : NetworkBehaviour
             return;
         }
 
-        dropdownChangeWeapon.AddOptions(Enum.GetNames(typeof(WeaponType)).ToList());
+        if (IsOwner)
+            dropdownChangeWeapon.AddOptions(Enum.GetNames(typeof(WeaponType)).ToList());
     }
 
     private void LoadRightHandTransform()
@@ -41,7 +44,18 @@ public class WeaponManager : NetworkBehaviour
         if (rightHand != null) return;
 
         Debug.LogWarning("Right hand transform not assigned! Loading right hand transform...");
-        rightHand = GameObject.Find("batch_Right Hand_0").transform;
+
+        
+        // Get the animation transform
+        Transform animationTransform = transform.parent.Find("Animation");
+        if (animationTransform == null)
+        {
+            Debug.LogError("Animation transform not found! Please assign the right hand transform in the inspector.");
+            return;
+        }
+
+        // Get the right hand transform
+        rightHand = animationTransform.Find("Hand").GetChild(1);
 
         if (rightHand == null)
         {
@@ -64,10 +78,19 @@ public class WeaponManager : NetworkBehaviour
             dropdownChangeWeapon.onValueChanged.AddListener(ChangeWeapon);
         }
 
-        CurrentWeapon.gameObject.SetActive(true);
-
         // Subscribe to weapon change
         currentWeaponType.OnValueChanged += ChangeWeapon;
+    }
+
+
+    private void EnableCurrentWeapon()
+    {
+        for (int i = 0; i < rightHand.childCount; i++)
+        {
+            rightHand.GetChild(i).gameObject.SetActive(false);
+        }
+
+        CurrentWeapon.gameObject.SetActive(true);
     }
 
     /// <summary>

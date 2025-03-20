@@ -3,5 +3,7 @@ public enum AnimationType
 {
     Idle,
     Run,
-    Jump
+    Jump,
+    Reload,
+    MeleeAttack
 }

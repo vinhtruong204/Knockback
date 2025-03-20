@@ -1,6 +1,7 @@
+using Unity.Netcode;
 using UnityEngine;
 
-public abstract class WeaponBase : MonoBehaviour
+public abstract class WeaponBase : NetworkBehaviour
 {
     public string Name { get; protected set; }
     public WeaponType Type { get; protected set; }

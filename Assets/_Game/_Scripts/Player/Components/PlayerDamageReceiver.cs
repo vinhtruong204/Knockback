@@ -3,14 +3,15 @@ using Unity.Netcode;
 
 public class PlayerDamageReceiver : NetworkBehaviour
 {
-    private NetworkVariable<int> health = new NetworkVariable<int>(
-        100,
+    private const int MAX_HEALTH = 100;
+    public NetworkVariable<int> health = new NetworkVariable<int>(
+        MAX_HEALTH,
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Server);
 
     public int Health => health.Value;
 
-    public event Action<int> HealthChanged;
+    public event Action<int, int> HealthChanged;
 
     public override void OnNetworkSpawn()
     {
@@ -18,9 +19,9 @@ public class PlayerDamageReceiver : NetworkBehaviour
         health.OnValueChanged += OnHealthChangedHandler;
     }
 
-    private void OnHealthChangedHandler(int previousValue, int newValue)
+    private void OnHealthChangedHandler(int previousHealth, int newHealth)
     {
-        HealthChanged?.Invoke(newValue);
+        HealthChanged?.Invoke(newHealth, MAX_HEALTH);
     }
 
     /// <summary>
