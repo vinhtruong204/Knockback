@@ -39,11 +39,31 @@ public class PlayerAnimation : MonoBehaviour
         for (int i = 0; i < rightHand.childCount; i++)
         {
             WeaponBase child = rightHand.GetChild(i).GetComponent<WeaponBase>();
+
+            // Primary and secondary weapon
             if (child is IReloadable)
             {
                 (child as IReloadable).OnReload += HandleReload;
             }
+
+            // Melee weapon
+            if (child is MeleeWeapon)
+            {
+                (child as MeleeWeapon).OnAttack += HandleAttack;
+            }
         }
+    }
+
+    private void HandleAttack(float attackDuration)
+    {
+        UpdateAnimationType(AnimationType.MeleeAttack);
+        StartCoroutine(MeleeAttackCoroutine(attackDuration));
+    }
+
+    private IEnumerator MeleeAttackCoroutine(float attackDuration)
+    {
+        yield return new WaitForSeconds(attackDuration);
+        UpdateAnimationType(AnimationType.Idle);
     }
 
     private void HandleReload(float reloadTime)
@@ -107,9 +127,17 @@ public class PlayerAnimation : MonoBehaviour
         for (int i = 0; i < rightHand.childCount; i++)
         {
             WeaponBase child = rightHand.GetChild(i).GetComponent<WeaponBase>();
+
+            // Primary and secondary weapon
             if (child is IReloadable)
             {
                 (child as IReloadable).OnReload += HandleReload;
+            }
+
+            // Melee weapon
+            if (child is MeleeWeapon)
+            {
+                (child as MeleeWeapon).OnAttack += HandleAttack;
             }
         }
     }

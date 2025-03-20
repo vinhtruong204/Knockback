@@ -21,6 +21,8 @@ public class WeaponManager : NetworkBehaviour
     private void Start()
     {
         LoadRightHandTransform();
+
+        EnableCurrentWeapon();
     }
 
     private void LoadDropdown()
@@ -76,10 +78,19 @@ public class WeaponManager : NetworkBehaviour
             dropdownChangeWeapon.onValueChanged.AddListener(ChangeWeapon);
         }
 
-        CurrentWeapon.gameObject.SetActive(true);
-
         // Subscribe to weapon change
         currentWeaponType.OnValueChanged += ChangeWeapon;
+    }
+
+
+    private void EnableCurrentWeapon()
+    {
+        for (int i = 0; i < rightHand.childCount; i++)
+        {
+            rightHand.GetChild(i).gameObject.SetActive(false);
+        }
+
+        CurrentWeapon.gameObject.SetActive(true);
     }
 
     /// <summary>

@@ -42,13 +42,13 @@ GameObject:
   - component: {fileID: 9028304660619406946}
   - component: {fileID: 1184070533809024398}
   - component: {fileID: 1964269213904035659}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: colt_python_0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &9028304660619406946
 Transform:
   m_ObjectHideFlags: 0
@@ -131,6 +131,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91cf68286f3ea1d4889afc9ad03b3ac4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
 --- !u!1 &990484488665984219
 GameObject:
   m_ObjectHideFlags: 0
@@ -735,6 +736,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
+  health:
+    m_InternalValue: 100
 --- !u!1 &2418047008025934680
 GameObject:
   m_ObjectHideFlags: 0
@@ -778,13 +781,13 @@ GameObject:
   - component: {fileID: 7282601805032205027}
   - component: {fileID: 2484213565225909936}
   - component: {fileID: 4608075398386343430}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: grenade_basic_0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &7282601805032205027
 Transform:
   m_ObjectHideFlags: 0
@@ -867,6 +870,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fae58a050e2be194cafd1d6ddf11e95d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
 --- !u!1 &2758658796697121917
 GameObject:
   m_ObjectHideFlags: 0
@@ -1087,14 +1091,15 @@ GameObject:
   m_Component:
   - component: {fileID: 4499162035881520021}
   - component: {fileID: 5164165622083948288}
+  - component: {fileID: 5011614286777563783}
   - component: {fileID: 9149695958631062242}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: dagger_basic_0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &4499162035881520021
 Transform:
   m_ObjectHideFlags: 0
@@ -1165,6 +1170,52 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!61 &5011614286777563783
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3354019172910935847}
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 0.96, y: 0.23}
+    newSize: {x: 0.96, y: 0.23}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Size: {x: 0.96, y: 0.23}
+  m_EdgeRadius: 0
 --- !u!114 &9149695958631062242
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1177,6 +1228,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 95d497eaad37f224a841d2be0d09d45e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  playerTeamId: {fileID: 5158094548615298852}
 --- !u!1 &4201598274957772037
 GameObject:
   m_ObjectHideFlags: 0
@@ -1897,13 +1950,13 @@ GameObject:
   - component: {fileID: 7288263111937675350}
   - component: {fileID: 3264552693160823906}
   - component: {fileID: 6524548969873201690}
-  m_Layer: 3
+  m_Layer: 8
   m_Name: ak_0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &7288263111937675350
 Transform:
   m_ObjectHideFlags: 0
@@ -1986,6 +2039,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ce633dea9ba51a4eba6ecbf537fa7d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
 --- !u!1 &7112624381579752579
 GameObject:
   m_ObjectHideFlags: 0

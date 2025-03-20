@@ -5,7 +5,7 @@ using UnityEngine;
 public class Bullet : NetworkBehaviour, IDisableAfterTime
 {
     [SerializeField] private float _speed = 10f;
-    [SerializeField] private int damage = 10;
+    private int damage = 10;
     private Vector2 _moveDirection;
     private float _timeToReturnPoolMax = 2f;
     private int bulletTeamId;
@@ -48,6 +48,12 @@ public class Bullet : NetworkBehaviour, IDisableAfterTime
 
         // Check if collision with player
         PlayerDamageReceiver hitPlayerHealth = collision.GetComponentInChildren<PlayerDamageReceiver>();
+        if (hitPlayerHealth == null)
+        {
+            Debug.Log("No PlayerDamageReceiver found on " + collision.name);
+            return;
+        }
+        
         hitPlayerHealth.TakeDamage(damage);
 
         // Check if collision with other player

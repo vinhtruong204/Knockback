@@ -4,7 +4,7 @@ using Unity.Netcode;
 public class PlayerDamageReceiver : NetworkBehaviour
 {
     private const int MAX_HEALTH = 100;
-    private NetworkVariable<int> health = new NetworkVariable<int>(
+    public NetworkVariable<int> health = new NetworkVariable<int>(
         MAX_HEALTH,
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Server);

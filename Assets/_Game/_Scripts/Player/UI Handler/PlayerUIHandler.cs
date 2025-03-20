@@ -46,6 +46,7 @@ public class PlayerUIHandler : NetworkBehaviour
         else
         {
             playerNameText.text = playerName.Value.ToString();
+            playerNameText.color = new Color(1f, 0.4f, 0.4f);
         }
 
         playerDamageReceiver.HealthChanged += OnHealthChanged;
