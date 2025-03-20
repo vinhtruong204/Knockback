@@ -55,7 +55,6 @@ public class PlayerShoot : NetworkBehaviour
     {
         // Get a bullet from the pool
         NetworkObject bullet = NetworkObjectPool.Singleton.GetNetworkObject(bulletPrefab, transform.GetChild(0).position, Quaternion.identity);
-        bullet.transform.localScale = transform.parent.localScale;
 
         // Initialize bullet with owner and team ID
         bullet.GetComponent<Bullet>().Initialize(teamId, transform.parent.localScale);

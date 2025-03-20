@@ -1828,7 +1828,7 @@ GameObject:
   - component: {fileID: 2918579004094214728}
   - component: {fileID: 8438491890119724914}
   m_Layer: 3
-  m_Name: ThrowBomb
+  m_Name: ThrowGrenade
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1861,6 +1861,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed21df29db5f94d45b1d82125553fdf4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  grenadePrefab: {fileID: 6408521290080680589, guid: bd641c00580cc944d82876b409de140b, type: 3}
 --- !u!1 &5880902759025271235
 GameObject:
   m_ObjectHideFlags: 0
