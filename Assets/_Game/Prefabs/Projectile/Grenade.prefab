@@ -9,9 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2982694635329509392}
-  - component: {fileID: 8560159386140473087}
-  m_Layer: 0
-  m_Name: Explode Zone
+  - component: {fileID: 8359538284122358651}
+  m_Layer: 9
+  m_Name: Grenade Model
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -27,13 +27,13 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 3.4173055, y: 3.4173055, z: 3.4173055}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8789349533110731857}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!58 &8560159386140473087
-CircleCollider2D:
+--- !u!61 &8359538284122358651
+BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -62,12 +62,22 @@ CircleCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_Radius: 0.5
+  m_Offset: {x: 0.016954422, y: -0.028050005}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 0.49, y: 0.48}
+    newSize: {x: 0.49, y: 0.48}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Size: {x: 0.35754633, y: 0.45870936}
+  m_EdgeRadius: 0
 --- !u!1 &6408521290080680589
 GameObject:
   m_ObjectHideFlags: 0
@@ -83,7 +93,7 @@ GameObject:
   - component: {fileID: 4317105658016753183}
   - component: {fileID: -2829773252977692812}
   - component: {fileID: 477872202216595381}
-  - component: {fileID: 8798000263499654281}
+  - component: {fileID: 6400841472454727747}
   m_Layer: 7
   m_Name: Grenade
   m_TagString: Untagged
@@ -280,8 +290,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
---- !u!61 &8798000263499654281
-BoxCollider2D:
+--- !u!58 &6400841472454727747
+CircleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -310,19 +320,9 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0.021798253, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.49, y: 0.48}
-    newSize: {x: 0.49, y: 0.48}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Size: {x: 0.37262464, y: 0.48}
-  m_EdgeRadius: 0
+  m_Offset: {x: -0.027793527, y: 0}
+  m_Radius: 1.4780422
