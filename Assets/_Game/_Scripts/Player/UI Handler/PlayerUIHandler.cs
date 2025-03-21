@@ -17,11 +17,13 @@ public class PlayerUIHandler : NetworkBehaviour
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Owner);
 
-    // 
+    // The local scale x of the player
     private NetworkVariable<float> scaleX = new(
         default,
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Owner);
+
+    // TO DO: Update UI to display the health of the player and other player information
 
     private void Awake()
     {

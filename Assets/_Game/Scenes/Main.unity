@@ -967,7 +967,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Throw
+  m_text: 'Throw: 3'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1665,6 +1665,7 @@ RectTransform:
   m_Children:
   - {fileID: 716553169}
   - {fileID: 129641138}
+  - {fileID: 1225831888}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -0.608}
   m_AnchorMin: {x: 0, y: 0}
@@ -1745,11 +1746,11 @@ Transform:
   m_GameObject: {fileID: 1225831885}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1170, y: 540, z: 0}
-  m_LocalScale: {x: 2.925, y: 2.925, z: 2.925}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1174980582}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1226099147
 GameObject:
@@ -2978,6 +2979,5 @@ SceneRoots:
   - {fileID: 519420032}
   - {fileID: 1402028172}
   - {fileID: 1174980582}
-  - {fileID: 1225831888}
   - {fileID: 1826749722}
   - {fileID: 677529323}

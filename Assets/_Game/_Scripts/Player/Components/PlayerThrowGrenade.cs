@@ -1,7 +1,8 @@
+using System;
 using Unity.Netcode;
 using UnityEngine;
 
-public class PlayerThrowGrenade : MonoBehaviour
+public class PlayerThrowGrenade : NetworkBehaviour
 {
     private int grenadeCount = 3;
     private PlayerInputHandler playerInputHandler;
@@ -9,6 +10,8 @@ public class PlayerThrowGrenade : MonoBehaviour
 
     [SerializeField]
     private GameObject grenadePrefab;
+
+    public event Action<int> OnThrowGrenade;
 
     private void Start()
     {
@@ -25,19 +28,22 @@ public class PlayerThrowGrenade : MonoBehaviour
         {
             grenadeCount--;
 
-            RequestThrowGrenadeServerRpc(playerTeamId.TeamId, transform.parent);
+            OnThrowGrenade?.Invoke(grenadeCount);
+
+            RequestThrowGrenadeServerRpc(playerTeamId.TeamId);
         }
     }
 
     [Rpc(SendTo.Server)]
-    private void RequestThrowGrenadeServerRpc(int teamId, Transform transform)
+    private void RequestThrowGrenadeServerRpc(int teamId)
     {
         // Get a grenade from the pool
-        NetworkObject grenade = NetworkObjectPool.Singleton.GetNetworkObject(grenadePrefab, transform.position, Quaternion.identity);
+        NetworkObject grenade = NetworkObjectPool.Singleton.GetNetworkObject(grenadePrefab, transform.parent.position, Quaternion.identity);
 
         // Initialize grenade with owner and team ID
-        grenade.GetComponent<Grenade>().Initialize(teamId, transform.localScale);
+        grenade.GetComponent<Grenade>().Initialize(teamId, transform.parent.localScale);
 
+        // Spawn the grenade on the network
         grenade.Spawn();
     }
 
