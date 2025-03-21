@@ -27,6 +27,8 @@ public class MeleeWeapon : WeaponBase
         lastTimeAttack = -AttackSpeed;
 
         AttackDuration = 1.0f;
+
+        Type = WeaponType.Melee;
     }
 
     private void Start()

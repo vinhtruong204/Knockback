@@ -65,8 +65,6 @@ public class Grenade : NetworkBehaviour, IDisableAfterTime
         if (!IsServer) return;
         if (!collision.name.Contains("Player")) return;
 
-        Debug.Log("Grenade hits " + collision.name);
-
         // Check if collsion with teamate
         PlayerTeamId hitPlayer = collision.GetComponentInChildren<PlayerTeamId>();
         if (hitPlayer == null) return;

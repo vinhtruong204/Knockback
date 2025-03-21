@@ -5,6 +5,9 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// This class is used to manage the player's weapons and magazine UI
+/// </summary>
 public class WeaponManager : NetworkBehaviour
 {
     private NetworkVariable<WeaponType> currentWeaponType = new NetworkVariable<WeaponType>(
@@ -37,7 +40,11 @@ public class WeaponManager : NetworkBehaviour
     {
         LoadRightHandTransform();
 
-        SubcribeEventAmmoChange();
+        if (IsOwner)
+        {
+            SubcribeEventAmmoChange();
+            UpdateMagazineText();
+        }
 
         EnableCurrentWeapon();
     }
@@ -161,8 +168,18 @@ public class WeaponManager : NetworkBehaviour
         // Hide the previous weapon
         rightHand.GetChild((int)previousValue).gameObject.SetActive(false);
 
+        if (IsOwner && currentWeaponType.Value != WeaponType.Melee)
+        {
+            UpdateMagazineText();
+        }
+
         // Change the current weapon
         rightHand.GetChild((int)newValue).gameObject.SetActive(true);
+    }
+
+    private void UpdateMagazineText()
+    {
+        textWeaponMagazine.text = $"{currentWeaponType.Value} {(CurrentWeapon as PrimaryWeapon).Ammo} / {(CurrentWeapon as PrimaryWeapon).TotalAmmo}";
     }
 
     /// <summary>
@@ -187,7 +204,20 @@ public class WeaponManager : NetworkBehaviour
         currentWeaponType.OnValueChanged -= ChangeWeapon;
 
         if (IsOwner)
+        {
             playerThrowGrenade.OnThrowGrenade -= ChangeGrenadeCountText;
+
+            // Unsubscribe weapon events
+            for (int i = 0; i < rightHand.childCount; i++)
+            {
+                WeaponBase child = rightHand.GetChild(i).GetComponent<WeaponBase>();
+
+                if (child is IReloadable)
+                {
+                    (child as IReloadable).OnAmmoChanged -= OnAmmoChanged;
+                }
+            }
+        }
     }
 
 }
