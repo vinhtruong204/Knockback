@@ -7,11 +7,15 @@ using UnityEngine.UI;
 
 public class PlayerUIHandler : NetworkBehaviour
 {
-    private PlayerDamageReceiver playerDamageReceiver;
     private PlayerInputHandler playerInputHandler;
     [SerializeField] private TextMeshProUGUI playerNameText;
-    [SerializeField] private Slider healthSlider;
 
+    [Header("Player Health And Heart UI")]
+    private PlayerDamageReceiver playerDamageReceiver;
+    [SerializeField] private Slider healthSlider;
+    [SerializeField] private TextMeshProUGUI heartText;
+
+    [Header("Network Variables")]
     private NetworkVariable<FixedString64Bytes> playerName = new(
         default,
         NetworkVariableReadPermission.Everyone,
@@ -49,9 +53,12 @@ public class PlayerUIHandler : NetworkBehaviour
         {
             playerNameText.text = playerName.Value.ToString();
             playerNameText.color = new Color(1f, 0.4f, 0.4f);
+            OnHeartChanged(playerDamageReceiver.Heart);
         }
 
+        // 
         playerDamageReceiver.HealthChanged += OnHealthChanged;
+        playerDamageReceiver.HeartChanged += OnHeartChanged;
 
         // Subscribe to playerName changes
         playerName.OnValueChanged += OnPlayerNameChanged;
@@ -61,6 +68,11 @@ public class PlayerUIHandler : NetworkBehaviour
 
         // Subscribe to local scale x changes
         scaleX.OnValueChanged += OnScaleXChanged;
+    }
+
+    private void OnHeartChanged(int newHeart)
+    {
+        heartText.text = newHeart.ToString();
     }
 
     private void OnScaleXChanged(float previousValue, float newValue)
@@ -95,8 +107,9 @@ public class PlayerUIHandler : NetworkBehaviour
         // Unsubscribe from input events
         playerInputHandler.OnMove -= OnMoveInput;
 
-        // Unsubscribe from player events
+        // Unsubscribe from player damage receiver events
         playerDamageReceiver.HealthChanged -= OnHealthChanged;
+        playerDamageReceiver.HeartChanged -= OnHeartChanged;
 
         // Unsubscribe from local scale x changes
         scaleX.OnValueChanged -= OnScaleXChanged;
