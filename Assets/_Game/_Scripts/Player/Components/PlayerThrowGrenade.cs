@@ -1,3 +1,4 @@
+using System;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -9,6 +10,8 @@ public class PlayerThrowGrenade : NetworkBehaviour
 
     [SerializeField]
     private GameObject grenadePrefab;
+
+    public event Action<int> OnThrowGrenade;
 
     private void Start()
     {
@@ -24,6 +27,8 @@ public class PlayerThrowGrenade : NetworkBehaviour
         if (grenadeCount > 0)
         {
             grenadeCount--;
+
+            OnThrowGrenade?.Invoke(grenadeCount);
 
             RequestThrowGrenadeServerRpc(playerTeamId.TeamId);
         }

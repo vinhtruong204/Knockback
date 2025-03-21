@@ -1367,7 +1367,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   rightHand: {fileID: 2857810753592575362}
+  playerThrowGrenade: {fileID: 8438491890119724914}
   dropdownChangeWeapon: {fileID: 0}
+  currentGrenadeCountText: {fileID: 0}
 --- !u!1 &4423261765386388197
 GameObject:
   m_ObjectHideFlags: 0
@@ -1861,6 +1863,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed21df29db5f94d45b1d82125553fdf4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   grenadePrefab: {fileID: 6408521290080680589, guid: bd641c00580cc944d82876b409de140b, type: 3}
 --- !u!1 &5880902759025271235
 GameObject:
