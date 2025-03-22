@@ -16,6 +16,17 @@ public class PrimaryWeapon : WeaponBase, IFireable, IReloadable
 
     private async void Awake()
     {
+        InitializeAtrributes();
+
+        var (asset, handle) = await AddressableLoader<WeaponData>.LoadAssetAsync("AK47_Basic");
+
+        Init(asset);
+
+        AddressableLoader<WeaponData>.ReleaseHandle(handle);
+    }
+
+    public void InitializeAtrributes()
+    {
         MaxAmmo = 30;
         Ammo = MaxAmmo;
         TotalAmmo = 30;
@@ -23,12 +34,15 @@ public class PrimaryWeapon : WeaponBase, IFireable, IReloadable
         ReloadTime = 1.0f;
         lastFireTime = -FireRate;
         Type = WeaponType.Primary;
+    }
 
-        var (asset, handle) = await AddressableLoader<WeaponData>.LoadAssetAsync("AK47_Basic");
+    public void ResetAmmo()
+    {
+        MaxAmmo = 30;
+        Ammo = MaxAmmo;
+        TotalAmmo = 30;
 
-        Init(asset);
-
-        AddressableLoader<WeaponData>.ReleaseHandle(handle);
+        OnAmmoChanged?.Invoke(Ammo, TotalAmmo);
     }
 
     public override void Attack()

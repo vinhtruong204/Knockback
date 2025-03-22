@@ -19,7 +19,7 @@ public class WeaponManager : NetworkBehaviour
     [SerializeField] private Transform rightHand;
     public WeaponBase CurrentWeapon => rightHand.GetChild((int)currentWeaponType.Value).GetComponent<WeaponBase>();
 
-    #region UI
+    #region UI Management
     [Header("UI Weapon Magazine")]
     [SerializeField] private TMP_Dropdown dropdownChangeWeapon;
     [SerializeField] private TextMeshProUGUI textWeaponMagazine;
@@ -49,7 +49,7 @@ public class WeaponManager : NetworkBehaviour
         EnableCurrentWeapon();
     }
 
-     private void LoadRightHandTransform()
+    private void LoadRightHandTransform()
     {
         if (rightHand != null) return;
 
@@ -91,7 +91,7 @@ public class WeaponManager : NetworkBehaviour
     {
         textWeaponMagazine.text = $"{currentWeaponType.Value} {ammo} / {totalAmmo}";
     }
-    
+
     private void UpdateMagazineText()
     {
         textWeaponMagazine.text = $"{currentWeaponType.Value} {(CurrentWeapon as PrimaryWeapon).Ammo} / {(CurrentWeapon as PrimaryWeapon).TotalAmmo}";
@@ -162,9 +162,14 @@ public class WeaponManager : NetworkBehaviour
     private void ChangeGrenadeCountText(int grenadeCount)
     {
         if (grenadeCount > 0)
+        {
+            buttonThrowGrenade.SetActive(true);
             buttonThrowGrenade.GetComponentInChildren<TextMeshProUGUI>().text = "Throw: " + grenadeCount;
+        }
         else
+        {
             buttonThrowGrenade.SetActive(false);
+        }
     }
 
     /// <summary>
@@ -199,7 +204,7 @@ public class WeaponManager : NetworkBehaviour
         rightHand.GetChild((int)newValue).gameObject.SetActive(true);
     }
 
-    
+
 
     public override void OnNetworkDespawn()
     {
@@ -223,6 +228,7 @@ public class WeaponManager : NetworkBehaviour
                     (child as IReloadable).OnAmmoChanged -= OnAmmoChanged;
                 }
             }
+
         }
     }
 

@@ -5,6 +5,9 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// This class is used to manage the player's UI(player name, health bar, heart)
+/// </summary>
 public class PlayerUIHandler : NetworkBehaviour
 {
     private PlayerInputHandler playerInputHandler;
