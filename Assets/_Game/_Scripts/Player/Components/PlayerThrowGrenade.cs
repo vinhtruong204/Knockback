@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class PlayerThrowGrenade : NetworkBehaviour
 {
-    private int grenadeCount = 3;
+    private const int MAX_GRENADE_COUNT = 3;
+    private int grenadeCount = MAX_GRENADE_COUNT;
     private PlayerInputHandler playerInputHandler;
     private PlayerTeamId playerTeamId;
 
@@ -19,6 +20,14 @@ public class PlayerThrowGrenade : NetworkBehaviour
         playerTeamId = transform.parent.GetComponentInChildren<PlayerTeamId>();
         
         playerInputHandler.OnThrow += ThrowGrenade;
+    }
+
+    public void ResetGrenadeCount()
+    {
+        grenadeCount = MAX_GRENADE_COUNT;
+
+        // Raise event to update grenade ui
+        OnThrowGrenade?.Invoke(grenadeCount);
     }
 
     private void ThrowGrenade()

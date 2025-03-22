@@ -19,7 +19,7 @@ public class WeaponManager : NetworkBehaviour
     [SerializeField] private Transform rightHand;
     public WeaponBase CurrentWeapon => rightHand.GetChild((int)currentWeaponType.Value).GetComponent<WeaponBase>();
 
-    #region UI
+    #region UI Management
     [Header("UI Weapon Magazine")]
     [SerializeField] private TMP_Dropdown dropdownChangeWeapon;
     [SerializeField] private TextMeshProUGUI textWeaponMagazine;
@@ -49,41 +49,6 @@ public class WeaponManager : NetworkBehaviour
         EnableCurrentWeapon();
     }
 
-    private void SubcribeEventAmmoChange()
-    {
-        for (int i = 0; i < rightHand.childCount; i++)
-        {
-            WeaponBase child = rightHand.GetChild(i).GetComponent<WeaponBase>();
-
-            if (child is IReloadable)
-            {
-                (child as IReloadable).OnAmmoChanged += OnAmmoChanged;
-            }
-        }
-    }
-
-    private void OnAmmoChanged(int ammo, int totalAmmo)
-    {
-        textWeaponMagazine.text = $"{currentWeaponType.Value} {ammo} / {totalAmmo}";
-    }
-
-    private void LoadDropdownAndWeapoonText()
-    {
-        dropdownChangeWeapon = GameObject.Find("Dropdown Change Weapon").GetComponent<TMP_Dropdown>();
-
-        if (dropdownChangeWeapon == null)
-        {
-            Debug.LogError("Dropdown not found!.");
-            return;
-        }
-
-        if (IsOwner)
-        {
-            dropdownChangeWeapon.AddOptions(Enum.GetNames(typeof(WeaponType)).ToList());
-            textWeaponMagazine = dropdownChangeWeapon.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
-        }
-    }
-
     private void LoadRightHandTransform()
     {
         if (rightHand != null) return;
@@ -109,16 +74,49 @@ public class WeaponManager : NetworkBehaviour
         }
     }
 
+    private void SubcribeEventAmmoChange()
+    {
+        for (int i = 0; i < rightHand.childCount; i++)
+        {
+            WeaponBase child = rightHand.GetChild(i).GetComponent<WeaponBase>();
+
+            if (child is IReloadable)
+            {
+                (child as IReloadable).OnAmmoChanged += OnAmmoChanged;
+            }
+        }
+    }
+
+    private void OnAmmoChanged(int ammo, int totalAmmo)
+    {
+        textWeaponMagazine.text = $"{currentWeaponType.Value} {ammo} / {totalAmmo}";
+    }
+
+    private void UpdateMagazineText()
+    {
+        textWeaponMagazine.text = $"{currentWeaponType.Value} {(CurrentWeapon as PrimaryWeapon).Ammo} / {(CurrentWeapon as PrimaryWeapon).TotalAmmo}";
+    }
+
+    private void EnableCurrentWeapon()
+    {
+        for (int i = 0; i < rightHand.childCount; i++)
+        {
+            rightHand.GetChild(i).gameObject.SetActive(false);
+        }
+
+        CurrentWeapon.gameObject.SetActive(true);
+    }
+
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
 
         LoadDropdownAndWeapoonText();
 
-        LoadButtonThrowGrenade();
-
         if (IsOwner)
         {
+            LoadButtonThrowGrenade();
+
             dropdownChangeWeapon.value = (int)currentWeaponType.Value;
 
             // Subscribe to dropdown change
@@ -132,9 +130,21 @@ public class WeaponManager : NetworkBehaviour
         currentWeaponType.OnValueChanged += ChangeWeapon;
     }
 
-    private void ChangeGrenadeCountText(int grenadeCount)
+    private void LoadDropdownAndWeapoonText()
     {
-        buttonThrowGrenade.GetComponentInChildren<TextMeshProUGUI>().text = "Throw: " + grenadeCount;
+        dropdownChangeWeapon = GameObject.Find("Dropdown Change Weapon").GetComponent<TMP_Dropdown>();
+
+        if (dropdownChangeWeapon == null)
+        {
+            Debug.LogError("Dropdown not found!.");
+            return;
+        }
+
+        if (IsOwner)
+        {
+            dropdownChangeWeapon.AddOptions(Enum.GetNames(typeof(WeaponType)).ToList());
+            textWeaponMagazine = dropdownChangeWeapon.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
+        }
     }
 
     private void LoadButtonThrowGrenade()
@@ -148,12 +158,29 @@ public class WeaponManager : NetworkBehaviour
         }
     }
 
-    private void EnableCurrentWeapon()
+
+    private void ChangeGrenadeCountText(int grenadeCount)
     {
-        for (int i = 0; i < rightHand.childCount; i++)
+        if (grenadeCount > 0)
         {
-            rightHand.GetChild(i).gameObject.SetActive(false);
+            buttonThrowGrenade.SetActive(true);
+            buttonThrowGrenade.GetComponentInChildren<TextMeshProUGUI>().text = "Throw: " + grenadeCount;
         }
+        else
+        {
+            buttonThrowGrenade.SetActive(false);
+        }
+    }
+
+    /// <summary>
+    /// Change the current weapon on local player
+    /// </summary>
+    /// <param name="newValue"></param>
+    private void ChangeWeapon(int newValue)
+    {
+        CurrentWeapon.gameObject.SetActive(false);
+
+        currentWeaponType.Value = (WeaponType)newValue;
 
         CurrentWeapon.gameObject.SetActive(true);
     }
@@ -177,23 +204,7 @@ public class WeaponManager : NetworkBehaviour
         rightHand.GetChild((int)newValue).gameObject.SetActive(true);
     }
 
-    private void UpdateMagazineText()
-    {
-        textWeaponMagazine.text = $"{currentWeaponType.Value} {(CurrentWeapon as PrimaryWeapon).Ammo} / {(CurrentWeapon as PrimaryWeapon).TotalAmmo}";
-    }
 
-    /// <summary>
-    /// Change the current weapon on local player
-    /// </summary>
-    /// <param name="newValue"></param>
-    private void ChangeWeapon(int newValue)
-    {
-        CurrentWeapon.gameObject.SetActive(false);
-
-        currentWeaponType.Value = (WeaponType)newValue;
-
-        CurrentWeapon.gameObject.SetActive(true);
-    }
 
     public override void OnNetworkDespawn()
     {
@@ -217,6 +228,7 @@ public class WeaponManager : NetworkBehaviour
                     (child as IReloadable).OnAmmoChanged -= OnAmmoChanged;
                 }
             }
+
         }
     }
 
