@@ -46,12 +46,12 @@ public class PlayerShoot : NetworkBehaviour
 
         if (weaponManager.CurrentWeapon is IFireable)
         {
-            RequestShootRpc(playerTeamId.TeamId);
+            RequestShootRpc(playerTeamId.TeamId, OwnerClientId);
         }
     }
 
     [Rpc(SendTo.Server)]
-    private void RequestShootRpc(int teamId)
+    private void RequestShootRpc(int teamId, ulong shoterId)
     {
         // Get a bullet from the pool
         NetworkObject bullet = NetworkObjectPool.Singleton.GetNetworkObject(bulletPrefab, transform.GetChild(0).position, Quaternion.identity);
@@ -60,7 +60,7 @@ public class PlayerShoot : NetworkBehaviour
         bullet.GetComponent<Bullet>().Initialize(teamId, transform.parent.localScale);
 
         // Spawn the bullet on the network
-        bullet.GetComponent<NetworkObject>().Spawn();
+        bullet.GetComponent<NetworkObject>().SpawnWithOwnership(shoterId);
     }
 
     private void OnDisable()

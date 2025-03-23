@@ -39,12 +39,12 @@ public class PlayerThrowGrenade : NetworkBehaviour
 
             OnThrowGrenade?.Invoke(grenadeCount);
 
-            RequestThrowGrenadeServerRpc(playerTeamId.TeamId);
+            RequestThrowGrenadeServerRpc(playerTeamId.TeamId, OwnerClientId);
         }
     }
 
     [Rpc(SendTo.Server)]
-    private void RequestThrowGrenadeServerRpc(int teamId)
+    private void RequestThrowGrenadeServerRpc(int teamId, ulong grenadeOwnerId)
     {
         // Get a grenade from the pool
         NetworkObject grenade = NetworkObjectPool.Singleton.GetNetworkObject(grenadePrefab, transform.parent.position, Quaternion.identity);
@@ -53,7 +53,7 @@ public class PlayerThrowGrenade : NetworkBehaviour
         grenade.GetComponent<Grenade>().Initialize(teamId, transform.parent.localScale);
 
         // Spawn the grenade on the network
-        grenade.Spawn();
+        grenade.SpawnWithOwnership(grenadeOwnerId);
     }
 
     private void OnDisable()

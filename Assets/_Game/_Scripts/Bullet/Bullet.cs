@@ -35,7 +35,8 @@ public class Bullet : NetworkBehaviour, IDisableAfterTime
 
     private void Update()
     {
-        transform.Translate(speed * Time.deltaTime * moveDirection);
+        if (IsServer)
+            transform.Translate(speed * Time.deltaTime * moveDirection);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -53,8 +54,8 @@ public class Bullet : NetworkBehaviour, IDisableAfterTime
             Debug.Log("No PlayerDamageReceiver found on " + collision.name);
             return;
         }
-        
-        hitPlayerHealth.TakeDamage(damage);
+
+        hitPlayerHealth.TakeDamage(damage, OwnerClientId);
 
         // Check if collision with other player
         if (collision.TryGetComponent(out NetworkObject networkObject) && networkObject.IsSpawned)

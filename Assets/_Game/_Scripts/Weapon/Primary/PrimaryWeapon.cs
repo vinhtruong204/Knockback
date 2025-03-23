@@ -25,7 +25,7 @@ public class PrimaryWeapon : WeaponBase, IFireable, IReloadable
         AddressableLoader<WeaponData>.ReleaseHandle(handle);
     }
 
-    public void InitializeAtrributes()
+    private void InitializeAtrributes()
     {
         MaxAmmo = 30;
         Ammo = MaxAmmo;

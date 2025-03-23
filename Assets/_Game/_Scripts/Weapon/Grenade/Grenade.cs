@@ -79,11 +79,11 @@ public class Grenade : NetworkBehaviour, IDisableAfterTime
 
         if (hitPlayer.TeamId == teamId)
         {
-            hitPlayerHealth.TakeDamage(damage / 2);
+            hitPlayerHealth.TakeDamage(damage / 2, OwnerClientId);
         }
         else
         {
-            hitPlayerHealth.TakeDamage(damage);
+            hitPlayerHealth.TakeDamage(damage, OwnerClientId);
         }
 
         // Check if collision with other player
