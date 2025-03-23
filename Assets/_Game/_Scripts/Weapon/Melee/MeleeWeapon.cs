@@ -90,7 +90,7 @@ public class MeleeWeapon : WeaponBase
             PlayerTeamId hitPlayer = collision.GetComponentInChildren<PlayerTeamId>();
             if (hitPlayer == null || hitPlayer.TeamId == playerTeamId.TeamId) return;
 
-            HandleDamageServerRpc(collision.GetComponent<NetworkObject>());
+            HandleDamageServerRpc(collision.GetComponent<NetworkObject>(), playerTeamId.OwnerClientId);
             
             // Attack direction
             Vector2 attackDirection = playerTeamId.transform.parent.localScale.x > 0 ? Vector2.right : Vector2.left;
@@ -119,7 +119,7 @@ public class MeleeWeapon : WeaponBase
     }
 
     [Rpc(SendTo.Server)]
-    private void HandleDamageServerRpc(NetworkObjectReference targetObject)
+    private void HandleDamageServerRpc(NetworkObjectReference targetObject, ulong attackerId)
     {
         if (targetObject.TryGet(out NetworkObject networkObject))
         {
@@ -127,7 +127,7 @@ public class MeleeWeapon : WeaponBase
 
             if (playerHealth != null)
             {
-                playerHealth.TakeDamage(Damage);
+                playerHealth.TakeDamage(Damage, attackerId);
             }
             else
             {
