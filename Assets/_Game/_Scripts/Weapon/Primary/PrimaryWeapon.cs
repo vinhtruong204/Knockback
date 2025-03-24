@@ -64,8 +64,6 @@ public class PrimaryWeapon : WeaponBase, IFireable, IReloadable
 
         OnAmmoChanged?.Invoke(Ammo, TotalAmmo);
 
-        Debug.Log($"{Name} fires! Ammo left: {Ammo}");
-
         if (Ammo == 0)
             Reload();
     }
@@ -95,7 +93,6 @@ public class PrimaryWeapon : WeaponBase, IFireable, IReloadable
             // Raise event
             
             OnAmmoChanged?.Invoke(Ammo, TotalAmmo);
-            Debug.Log(Name + " reloaded!");
         }
     }
 }

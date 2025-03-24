@@ -57,7 +57,6 @@ public class PlayerDamageReceiver : NetworkBehaviour
 
         if (IsOwner)
         {
-            Debug.Log("Owner heart changed: " + newHeart);
             deadCount.Value += 1;
 
             if (NetworkManager.Singleton.ConnectedClients.TryGetValue(lastAttackerId.Value, out NetworkClient attackerClient))
@@ -78,7 +77,30 @@ public class PlayerDamageReceiver : NetworkBehaviour
             }
             else
             {
-                MatchOver?.Invoke(true);
+                GameObject player = null;
+                ulong localClientId = NetworkManager.Singleton.LocalClientId;
+
+                if (NetworkManager.Singleton.ConnectedClients.TryGetValue(localClientId, out NetworkClient client))
+                {
+                    player = client.PlayerObject != null ? client.PlayerObject.gameObject : null;
+                }
+
+                if (player == null)
+                {
+                    Debug.LogError("Player object not found.");
+                    return;
+                }
+
+                // Send win message to the local player
+                PlayerDamageReceiver damageReceiver = player.GetComponentInChildren<PlayerDamageReceiver>();
+                if (damageReceiver != null)
+                {
+                    damageReceiver.MatchOver?.Invoke(true);
+                }
+                else
+                {
+                    Debug.LogError("PlayerDamageReceiver not found.");
+                }
             }
         }
     }

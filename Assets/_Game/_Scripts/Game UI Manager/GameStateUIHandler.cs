@@ -1,16 +1,14 @@
 using Unity.Netcode;
 using UnityEngine;
-using System.Collections;
-using System;
 
 public class GameStateUIHandler : NetworkBehaviour
 {
-    private GameObject player;
-    [SerializeField] private GameObject gameOverUI;
+    [SerializeField] private GameObject player;
+    [SerializeField] private GameObject matchCompletedUI;
 
     protected override void OnInSceneObjectsSpawned()
     {
-        base.OnNetworkPostSpawn();
+        base.OnInSceneObjectsSpawned();
         ulong localClientId = NetworkManager.Singleton.LocalClientId;
 
         if (NetworkManager.Singleton.ConnectedClients.TryGetValue(localClientId, out NetworkClient client))
@@ -24,8 +22,17 @@ public class GameStateUIHandler : NetworkBehaviour
             return;
         }
 
-        player.GetComponentInChildren<PlayerDamageReceiver>().MatchOver += OnMatchOverHandler;
+        PlayerDamageReceiver damageReceiver = player.GetComponentInChildren<PlayerDamageReceiver>();
+        if (damageReceiver != null)
+        {
+            damageReceiver.MatchOver += OnMatchOverHandler;
+        }
+        else
+        {
+            Debug.LogError("PlayerDamageReceiver not found in player object.");
+        }
     }
+
 
     private void OnMatchOverHandler(bool isWinner)
     {
@@ -41,13 +48,13 @@ public class GameStateUIHandler : NetworkBehaviour
 
     private void OnGameWin()
     {
-        gameOverUI.SetActive(true); 
+        matchCompletedUI.SetActive(true);
         Debug.Log("Game Win" + "KillCount: " + player.GetComponentInChildren<PlayerDamageReceiver>().KillCount + " DeadCount: " + player.GetComponentInChildren<PlayerDamageReceiver>().DeadCount);
     }
 
     private void OnGameOver()
     {
-        gameOverUI.SetActive(true);
+        matchCompletedUI.SetActive(true);
         Debug.Log("Game Over" + "KillCount: " + player.GetComponentInChildren<PlayerDamageReceiver>().KillCount + " DeadCount: " + player.GetComponentInChildren<PlayerDamageReceiver>().DeadCount);
     }
 
