@@ -1,10 +1,15 @@
+using TMPro;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameStateUIHandler : NetworkBehaviour
 {
     [SerializeField] private GameObject player;
     [SerializeField] private GameObject matchCompletedUI;
+    [SerializeField] private TextMeshProUGUI killCountText;
+    [SerializeField] private TextMeshProUGUI deadCountText;
+    [SerializeField] private Button okButton;
 
     protected override void OnInSceneObjectsSpawned()
     {
@@ -38,24 +43,16 @@ public class GameStateUIHandler : NetworkBehaviour
     {
         if (isWinner)
         {
-            OnGameWin();
+            Debug.Log("Game Win");
         }
         else
         {
-            OnGameOver();
+            Debug.Log("Game Over");
         }
-    }
 
-    private void OnGameWin()
-    {
         matchCompletedUI.SetActive(true);
-        Debug.Log("Game Win" + "KillCount: " + player.GetComponentInChildren<PlayerDamageReceiver>().KillCount + " DeadCount: " + player.GetComponentInChildren<PlayerDamageReceiver>().DeadCount);
-    }
-
-    private void OnGameOver()
-    {
-        matchCompletedUI.SetActive(true);
-        Debug.Log("Game Over" + "KillCount: " + player.GetComponentInChildren<PlayerDamageReceiver>().KillCount + " DeadCount: " + player.GetComponentInChildren<PlayerDamageReceiver>().DeadCount);
+        killCountText.text = "Kill Count: " + player.GetComponentInChildren<PlayerDamageReceiver>().KillCount.ToString();
+        deadCountText.text = "Dead Count: " + player.GetComponentInChildren<PlayerDamageReceiver>().DeadCount.ToString();
     }
 
     public override void OnNetworkDespawn()
