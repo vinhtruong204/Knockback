@@ -1,16 +1,19 @@
+using TMPro;
 using Unity.Netcode;
 using UnityEngine;
-using System.Collections;
-using System;
+using UnityEngine.UI;
 
 public class GameStateUIHandler : NetworkBehaviour
 {
-    private GameObject player;
-    [SerializeField] private GameObject gameOverUI;
+    [SerializeField] private GameObject player;
+    [SerializeField] private GameObject matchCompletedUI;
+    [SerializeField] private TextMeshProUGUI killCountText;
+    [SerializeField] private TextMeshProUGUI deadCountText;
+    [SerializeField] private Button okButton;
 
     protected override void OnInSceneObjectsSpawned()
     {
-        base.OnNetworkPostSpawn();
+        base.OnInSceneObjectsSpawned();
         ulong localClientId = NetworkManager.Singleton.LocalClientId;
 
         if (NetworkManager.Singleton.ConnectedClients.TryGetValue(localClientId, out NetworkClient client))
@@ -24,31 +27,32 @@ public class GameStateUIHandler : NetworkBehaviour
             return;
         }
 
-        player.GetComponentInChildren<PlayerDamageReceiver>().MatchOver += OnMatchOverHandler;
+        PlayerDamageReceiver damageReceiver = player.GetComponentInChildren<PlayerDamageReceiver>();
+        if (damageReceiver != null)
+        {
+            damageReceiver.MatchOver += OnMatchOverHandler;
+        }
+        else
+        {
+            Debug.LogError("PlayerDamageReceiver not found in player object.");
+        }
     }
+
 
     private void OnMatchOverHandler(bool isWinner)
     {
         if (isWinner)
         {
-            OnGameWin();
+            Debug.Log("Game Win");
         }
         else
         {
-            OnGameOver();
+            Debug.Log("Game Over");
         }
-    }
 
-    private void OnGameWin()
-    {
-        gameOverUI.SetActive(true); 
-        Debug.Log("Game Win" + "KillCount: " + player.GetComponentInChildren<PlayerDamageReceiver>().KillCount + " DeadCount: " + player.GetComponentInChildren<PlayerDamageReceiver>().DeadCount);
-    }
-
-    private void OnGameOver()
-    {
-        gameOverUI.SetActive(true);
-        Debug.Log("Game Over" + "KillCount: " + player.GetComponentInChildren<PlayerDamageReceiver>().KillCount + " DeadCount: " + player.GetComponentInChildren<PlayerDamageReceiver>().DeadCount);
+        matchCompletedUI.SetActive(true);
+        killCountText.text = "Kill Count: " + player.GetComponentInChildren<PlayerDamageReceiver>().KillCount.ToString();
+        deadCountText.text = "Dead Count: " + player.GetComponentInChildren<PlayerDamageReceiver>().DeadCount.ToString();
     }
 
     public override void OnNetworkDespawn()

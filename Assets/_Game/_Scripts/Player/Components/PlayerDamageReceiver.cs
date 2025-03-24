@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -17,7 +18,7 @@ public class PlayerDamageReceiver : NetworkBehaviour
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Server);
 
-    private NetworkVariable<int> killCount = new NetworkVariable<int>(
+    public NetworkVariable<int> killCount = new NetworkVariable<int>(
         0,
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Server);
@@ -57,7 +58,6 @@ public class PlayerDamageReceiver : NetworkBehaviour
 
         if (IsOwner)
         {
-            Debug.Log("Owner heart changed: " + newHeart);
             deadCount.Value += 1;
 
             if (NetworkManager.Singleton.ConnectedClients.TryGetValue(lastAttackerId.Value, out NetworkClient attackerClient))
@@ -74,13 +74,50 @@ public class PlayerDamageReceiver : NetworkBehaviour
         {
             if (IsOwner)
             {
-                MatchOver?.Invoke(false);
+                StartCoroutine(NotifyMatchOverAfterDelay(this, false));   
             }
             else
             {
-                MatchOver?.Invoke(true);
+                OnMatchCompletedOnWinner();
             }
         }
+    }
+
+    /// <summary>
+    /// Handles the match completion for the winner.
+    /// </summary>
+    private void OnMatchCompletedOnWinner()
+    {
+        GameObject player = null;
+        ulong localClientId = NetworkManager.Singleton.LocalClientId;
+
+        if (NetworkManager.Singleton.ConnectedClients.TryGetValue(localClientId, out NetworkClient client))
+        {
+            player = client.PlayerObject != null ? client.PlayerObject.gameObject : null;
+        }
+
+        if (player == null)
+        {
+            Debug.LogError("Player object not found.");
+            return;
+        }
+
+        // Send win message to the local player
+        PlayerDamageReceiver damageReceiver = player.GetComponentInChildren<PlayerDamageReceiver>();
+        if (damageReceiver != null)
+        {
+            StartCoroutine(NotifyMatchOverAfterDelay(damageReceiver, true));
+        }
+        else
+        {
+            Debug.LogError("PlayerDamageReceiver not found.");
+        }
+    }
+
+    private IEnumerator NotifyMatchOverAfterDelay(PlayerDamageReceiver damageReceiver, bool isWinner)
+    {
+        yield return new WaitForSeconds(1f); // Delay to ensure the player is fully initialized
+        damageReceiver.MatchOver?.Invoke(isWinner);
     }
 
     [Rpc(SendTo.Server)]
