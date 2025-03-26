@@ -20,7 +20,7 @@ public class PlayerDamageReceiver : NetworkBehaviour
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Server);
 
-    public NetworkVariable<int> killCount = new NetworkVariable<int>(
+    private NetworkVariable<int> killCount = new NetworkVariable<int>(
         0,
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Server);
@@ -30,8 +30,7 @@ public class PlayerDamageReceiver : NetworkBehaviour
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Owner);
 
-    // Lưu ID của người chơi gây sát thương cuối cùng
-    public NetworkVariable<ulong> lastAttackerId = new NetworkVariable<ulong>(
+    private NetworkVariable<ulong> lastAttackerId = new NetworkVariable<ulong>(
         0,
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Server);
@@ -83,6 +82,7 @@ public class PlayerDamageReceiver : NetworkBehaviour
                 OnMatchCompletedOnWinner();
             }
 
+            // Stop the player from moving
             GetComponentInParent<Rigidbody2D>().simulated = false;
         }
     }
@@ -132,6 +132,8 @@ public class PlayerDamageReceiver : NetworkBehaviour
             Debug.LogError("PlayerObjectReference is null");
             return;
         }
+        
+        if (OwnerClientId == playerNetworkObject.OwnerClientId) return;
 
         PlayerDamageReceiver attackerDamageReceiver = playerNetworkObject.GetComponentInChildren<PlayerDamageReceiver>();
 
