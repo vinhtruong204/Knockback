@@ -7,6 +7,7 @@ public class PlayerDamageReceiver : NetworkBehaviour
 {
     private const int MAX_HEALTH = 100;
     private const int MAX_HEART = 5;
+    private Vector3 revivedPosition = new Vector3(0, 7, 0); // Set the position where the player will be revived
 
     private NetworkVariable<int> health = new NetworkVariable<int>(
         MAX_HEALTH,
@@ -74,7 +75,7 @@ public class PlayerDamageReceiver : NetworkBehaviour
         {
             if (IsOwner)
             {
-                StartCoroutine(NotifyMatchOverAfterDelay(this, false));   
+                StartCoroutine(NotifyMatchOverAfterDelay(this, false));
             }
             else
             {
@@ -157,22 +158,27 @@ public class PlayerDamageReceiver : NetworkBehaviour
     {
         if (!IsServer) return;
 
-        health.Value -= 50;
+        health.Value -= damage;
 
         if (health.Value <= 0)
         {
             lastAttackerId.Value = attackerId;
 
-            ResetPositionOnDeathClientRpc();
-            heart.Value -= 1;
-            health.Value = MAX_HEALTH;
+            LostLife();
         }
+    }
+
+    public void LostLife()
+    {
+        heart.Value -= 1;
+        health.Value = MAX_HEALTH;
+        ResetPositionOnDeathClientRpc();
     }
 
     [Rpc(SendTo.ClientsAndHost)]
     private void ResetPositionOnDeathClientRpc()
     {
-        transform.parent.position = Vector3.zero;
+        transform.parent.position = revivedPosition;
         transform.parent.GetComponent<Rigidbody2D>().linearVelocity = Vector2.zero;
     }
 
