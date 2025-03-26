@@ -82,6 +82,8 @@ public class PlayerDamageReceiver : NetworkBehaviour
             {
                 OnMatchCompletedOnWinner();
             }
+
+            GetComponentInParent<Rigidbody2D>().simulated = false;
         }
     }
 
