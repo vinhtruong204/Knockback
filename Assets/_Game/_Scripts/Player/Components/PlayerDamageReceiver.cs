@@ -83,6 +83,7 @@ public class PlayerDamageReceiver : NetworkBehaviour
                 OnMatchCompletedOnWinner();
             }
 
+            // Stop the player from moving
             GetComponentInParent<Rigidbody2D>().simulated = false;
         }
     }
@@ -132,6 +133,8 @@ public class PlayerDamageReceiver : NetworkBehaviour
             Debug.LogError("PlayerObjectReference is null");
             return;
         }
+        
+        if (OwnerClientId == playerNetworkObject.OwnerClientId) return;
 
         PlayerDamageReceiver attackerDamageReceiver = playerNetworkObject.GetComponentInChildren<PlayerDamageReceiver>();
 
