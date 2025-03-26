@@ -84,8 +84,6 @@ public class MeleeWeapon : WeaponBase
     {
         if (collision.name.Contains("Player"))
         {
-            Debug.Log(Name + " hits " + collision.name + " and deals " + Damage + " damage!");
-
             // Check if collsion with teamate
             PlayerTeamId hitPlayer = collision.GetComponentInChildren<PlayerTeamId>();
             if (hitPlayer == null || hitPlayer.TeamId == playerTeamId.TeamId) return;

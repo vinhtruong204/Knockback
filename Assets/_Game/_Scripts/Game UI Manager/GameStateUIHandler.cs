@@ -9,6 +9,7 @@ public class GameStateUIHandler : NetworkBehaviour
     [SerializeField] private GameObject matchCompletedUI;
     [SerializeField] private TextMeshProUGUI killCountText;
     [SerializeField] private TextMeshProUGUI deadCountText;
+    [SerializeField] private TextMeshProUGUI resultText;
     [SerializeField] private Button okButton;
 
     protected override void OnInSceneObjectsSpawned()
@@ -43,11 +44,11 @@ public class GameStateUIHandler : NetworkBehaviour
     {
         if (isWinner)
         {
-            Debug.Log("Game Win");
+            resultText.text = "You Win!";
         }
         else
         {
-            Debug.Log("Game Over");
+            resultText.text = "You Lose!";
         }
 
         matchCompletedUI.SetActive(true);

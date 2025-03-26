@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using Unity.Netcode;
+using Unity.Netcode.Transports.UTP;
 using UnityEngine;
 
 public class PlayerDamageReceiver : NetworkBehaviour
@@ -30,7 +31,7 @@ public class PlayerDamageReceiver : NetworkBehaviour
         NetworkVariableWritePermission.Owner);
 
     // Lưu ID của người chơi gây sát thương cuối cùng
-    private NetworkVariable<ulong> lastAttackerId = new NetworkVariable<ulong>(
+    public NetworkVariable<ulong> lastAttackerId = new NetworkVariable<ulong>(
         0,
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Server);
@@ -159,11 +160,10 @@ public class PlayerDamageReceiver : NetworkBehaviour
         if (!IsServer) return;
 
         health.Value -= damage;
+        lastAttackerId.Value = attackerId;
 
         if (health.Value <= 0)
         {
-            lastAttackerId.Value = attackerId;
-
             LostLife();
         }
     }
