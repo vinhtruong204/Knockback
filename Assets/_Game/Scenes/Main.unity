@@ -720,7 +720,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Match Completed
+  m_text: 'Match Result: '
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -3494,6 +3494,7 @@ MonoBehaviour:
   matchCompletedUI: {fileID: 1488818121}
   killCountText: {fileID: 54301456}
   deadCountText: {fileID: 112183969}
+  resultText: {fileID: 134324730}
   okButton: {fileID: 1977253404}
 --- !u!4 &1855193553
 Transform:

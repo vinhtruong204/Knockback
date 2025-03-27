@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using Unity.Netcode;
+using Unity.Netcode.Transports.UTP;
 using UnityEngine;
 
 public class PlayerDamageReceiver : NetworkBehaviour
@@ -19,7 +20,7 @@ public class PlayerDamageReceiver : NetworkBehaviour
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Server);
 
-    public NetworkVariable<int> killCount = new NetworkVariable<int>(
+    private NetworkVariable<int> killCount = new NetworkVariable<int>(
         0,
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Server);
@@ -29,7 +30,6 @@ public class PlayerDamageReceiver : NetworkBehaviour
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Owner);
 
-    // Lưu ID của người chơi gây sát thương cuối cùng
     private NetworkVariable<ulong> lastAttackerId = new NetworkVariable<ulong>(
         0,
         NetworkVariableReadPermission.Everyone,
@@ -81,6 +81,9 @@ public class PlayerDamageReceiver : NetworkBehaviour
             {
                 OnMatchCompletedOnWinner();
             }
+
+            // Stop the player from moving
+            GetComponentInParent<Rigidbody2D>().simulated = false;
         }
     }
 
@@ -129,6 +132,8 @@ public class PlayerDamageReceiver : NetworkBehaviour
             Debug.LogError("PlayerObjectReference is null");
             return;
         }
+        
+        if (OwnerClientId == playerNetworkObject.OwnerClientId) return;
 
         PlayerDamageReceiver attackerDamageReceiver = playerNetworkObject.GetComponentInChildren<PlayerDamageReceiver>();
 
@@ -159,11 +164,10 @@ public class PlayerDamageReceiver : NetworkBehaviour
         if (!IsServer) return;
 
         health.Value -= damage;
+        lastAttackerId.Value = attackerId;
 
         if (health.Value <= 0)
         {
-            lastAttackerId.Value = attackerId;
-
             LostLife();
         }
     }
