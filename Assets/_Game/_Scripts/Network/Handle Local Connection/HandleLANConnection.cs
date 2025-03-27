@@ -1,6 +1,7 @@
 using System;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading.Tasks;
 using TMPro;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
@@ -35,7 +36,7 @@ public class HandleLANConnection : MonoBehaviour
         NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnected;
     }
 
-    private void OnSceneLoaded(ulong clientId, string sceneName, LoadSceneMode loadSceneMode)
+    private async void OnSceneLoaded(ulong clientId, string sceneName, LoadSceneMode loadSceneMode)
     {
         if (!NetworkManager.Singleton.IsServer) return;
 
@@ -45,6 +46,8 @@ public class HandleLANConnection : MonoBehaviour
             Debug.Log($"Player {clientId} already has a player object.");
             return;
         }
+
+        await Task.Delay(500);
 
         GameObject player = NetworkManager.Singleton.NetworkConfig.Prefabs.Prefabs[0].Prefab;
         NetworkObject playerObject = Instantiate(player).GetComponent<NetworkObject>();
