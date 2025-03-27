@@ -1,3 +1,5 @@
+using System;
+using System.Threading.Tasks;
 using TMPro;
 using Unity.Netcode;
 using UnityEngine;
@@ -15,6 +17,14 @@ public class GameStateUIHandler : NetworkBehaviour
     protected override void OnInSceneObjectsSpawned()
     {
         base.OnInSceneObjectsSpawned();
+
+        LoadPlayerObject();
+    }
+
+    private async void LoadPlayerObject()
+    {
+        await Task.Delay(1000);
+
         ulong localClientId = NetworkManager.Singleton.LocalClientId;
 
         if (NetworkManager.Singleton.ConnectedClients.TryGetValue(localClientId, out NetworkClient client))
@@ -38,7 +48,6 @@ public class GameStateUIHandler : NetworkBehaviour
             Debug.LogError("PlayerDamageReceiver not found in player object.");
         }
     }
-
 
     private void OnMatchOverHandler(bool isWinner)
     {
