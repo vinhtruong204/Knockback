@@ -1,8 +1,10 @@
 using System;
+using System.Collections;
 using System.Threading.Tasks;
 using TMPro;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameStateUIHandler : NetworkBehaviour
@@ -12,7 +14,7 @@ public class GameStateUIHandler : NetworkBehaviour
     [SerializeField] private TextMeshProUGUI killCountText;
     [SerializeField] private TextMeshProUGUI deadCountText;
     [SerializeField] private TextMeshProUGUI resultText;
-    [SerializeField] private Button okButton;
+    [SerializeField] private TextMeshProUGUI timeToLeaveText;
 
     protected override void OnInSceneObjectsSpawned()
     {
@@ -63,6 +65,24 @@ public class GameStateUIHandler : NetworkBehaviour
         matchCompletedUI.SetActive(true);
         killCountText.text = "Kill Count: " + player.GetComponentInChildren<PlayerDamageReceiver>().KillCount.ToString();
         deadCountText.text = "Dead Count: " + player.GetComponentInChildren<PlayerDamageReceiver>().DeadCount.ToString();
+
+
+        StartCoroutine(ShowTimeToLeave());
+    }
+
+    private IEnumerator ShowTimeToLeave()
+    {
+        float timeToLeave = 5f; // Time in seconds
+        while (timeToLeave > 0)
+        {
+            timeToLeaveText.text = "Time to leave: " + Mathf.Ceil(timeToLeave).ToString() + "s";
+            yield return new WaitForSeconds(1f);
+            timeToLeave--;
+        }
+
+        if (IsServer)
+            // Load the main menu scene after the countdown
+            NetworkManager.Singleton.SceneManager.LoadScene("Menu", LoadSceneMode.Single);
     }
 
     public override void OnNetworkDespawn()
@@ -75,5 +95,6 @@ public class GameStateUIHandler : NetworkBehaviour
             // Unsubscribe from the event to prevent memory leaks
             player.GetComponentInChildren<PlayerDamageReceiver>().MatchOver -= OnMatchOverHandler;
         }
+
     }
 }

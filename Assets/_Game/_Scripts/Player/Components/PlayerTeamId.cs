@@ -13,8 +13,8 @@ public class PlayerTeamId : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
-        
+
         if (IsServer)
-            teamId.Value = (int)OwnerClientId % 2;
+            teamId.Value = (int)OwnerClientId;
     }
 }
