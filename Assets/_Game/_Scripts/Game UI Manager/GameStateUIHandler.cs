@@ -25,7 +25,7 @@ public class GameStateUIHandler : NetworkBehaviour
 
     private async void LoadPlayerObject()
     {
-        await Task.Delay(1000);
+        await Task.Delay(2000);
 
         ulong localClientId = NetworkManager.Singleton.LocalClientId;
 

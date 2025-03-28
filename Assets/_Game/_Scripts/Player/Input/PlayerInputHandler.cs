@@ -2,6 +2,7 @@ using System;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(PlayerInput))]
 public class PlayerInputHandler : NetworkBehaviour
@@ -11,6 +12,12 @@ public class PlayerInputHandler : NetworkBehaviour
     private InputAction jumpInputAction;
     private InputAction attackInputAction;
     private InputAction throwInputAction;
+
+    [Header("Buttons ")]
+    [SerializeField] private Button jumpButton;
+    [SerializeField] private Button attackButton;
+    [SerializeField] private Button throwButton;
+
 
     // Events
     public event Action<Vector2> OnMove;
@@ -32,6 +39,7 @@ public class PlayerInputHandler : NetworkBehaviour
             playerInput.enabled = false;
             return;
         }
+
 
         InitialMoveInputAction();
 
@@ -73,6 +81,27 @@ public class PlayerInputHandler : NetworkBehaviour
         {
             Debug.LogError("Jump input action not found!");
         }
+    
+
+        // Find the button in the scene 
+        jumpButton = GameObject.Find("JumpButton").GetComponent<Button>();
+
+        // Check if the button is null
+        if (jumpButton != null)
+        {
+            // Subscribe to button click event
+            jumpButton.onClick.AddListener(OnJumpInput);
+        }
+        else
+        {
+            Debug.LogError("Jump button not found!");
+        }
+    }
+
+    private void OnJumpInput()
+    {
+        if (!IsOwner) return;
+        OnJump?.Invoke();
     }
 
     private void InitialAttackInputAction()
@@ -89,6 +118,26 @@ public class PlayerInputHandler : NetworkBehaviour
         {
             Debug.LogError("Attack input action not found!");
         }
+
+        // Find the button in the scene
+        attackButton = GameObject.Find("AttackButton").GetComponent<Button>();
+
+        // Check if the button is null
+        if (attackButton != null)
+        {
+            // Subscribe to button click event
+            attackButton.onClick.AddListener(OnAttackInput);
+        }
+        else
+        {
+            Debug.LogError("Jump button not found!");
+        }
+    }
+
+    private void OnAttackInput()
+    {
+        if (!IsOwner) return;
+        OnAttack?.Invoke();
     }
 
     private void InitialThrowBombInputAction()
@@ -107,6 +156,24 @@ public class PlayerInputHandler : NetworkBehaviour
         {
             Debug.LogError("Throw input action not found!");
         }
+
+        // Find the button in the scene
+        throwButton = GameObject.Find("ThrowButton").GetComponent<Button>();
+        if (throwButton != null)
+        {
+            // Subscribe to button click event
+            throwButton.onClick.AddListener(OnThrowInputPerformed);
+        }
+        else
+        {
+            Debug.LogError("Throw button not found!");
+        }
+    }
+
+    private void OnThrowInputPerformed()
+    {
+        if (!IsOwner) return;
+        OnThrow?.Invoke();
     }
 
     private void OnThrowInputCanceled(InputAction.CallbackContext context)
@@ -123,19 +190,19 @@ public class PlayerInputHandler : NetworkBehaviour
     private void OnThrowInputPerformed(InputAction.CallbackContext context)
     {
         if (!IsOwner) return;
-        OnThrow?.Invoke();
+        // OnThrow?.Invoke();
     }
 
     private void OnAttackInput(InputAction.CallbackContext context)
     {
         if (!IsOwner) return;
-        OnAttack?.Invoke();
+        // OnAttack?.Invoke();
     }
 
     private void OnJumpInput(InputAction.CallbackContext context)
     {
         if (!IsOwner) return;
-        OnJump?.Invoke();
+        // OnJump?.Invoke();
     }
 
     private void OnMoveInput(InputAction.CallbackContext context)
@@ -172,5 +239,16 @@ public class PlayerInputHandler : NetworkBehaviour
             throwInputAction.performed -= OnThrowInputPerformed;
             throwInputAction.canceled -= OnThrowInputCanceled;
         }
+
+        // Unsubscribe from button click events
+        if (jumpButton != null)
+            jumpButton.onClick.RemoveAllListeners();
+
+        if (attackButton != null)
+            attackButton.onClick.RemoveAllListeners();
+
+        if (throwButton != null)
+            throwButton.onClick.RemoveAllListeners();
+
     }
 }
