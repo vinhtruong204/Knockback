@@ -5,26 +5,34 @@ using System.Threading.Tasks;
 using TMPro;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class HandleLANConnection : MonoBehaviour
 {
+    private const int MAX_PLAYER = 2;
     [Header("Host UI Elements")]
     [SerializeField] private TMP_InputField ipHostInputField;
     [SerializeField] private TMP_InputField portHostInputField;
     [SerializeField] private Button startHostButton;
+    [SerializeField] private Button stopHostButton;
+
+    [Header("Connection UI Elements")]
+    [SerializeField] private TextMeshProUGUI connectionStatusText;
+    private bool isSceneLoading;
 
     [Header("Client UI Elements")]
     [SerializeField] private TMP_InputField ipClientInputField;
     [SerializeField] private TMP_InputField portClientInputField;
     [SerializeField] private Button startClientButton;
-    private const int MAX_PLAYER = 2;
+
 
     private void Awake()
     {
+        QualitySettings.vSyncCount = 0; // Disables VSync
+        Application.targetFrameRate = 60; // Sets the target frame rate to 60 FPS
+
         SetupHostUI();
 
         SetupClientUI();
@@ -32,23 +40,23 @@ public class HandleLANConnection : MonoBehaviour
 
     private void Start()
     {
-        NetworkManager.Singleton.ConnectionApprovalCallback += ApprovalCheck;
+        // Set up the connection approval callback and client connected callback
+        if (NetworkManager.Singleton.ConnectionApprovalCallback == null)
+            NetworkManager.Singleton.ConnectionApprovalCallback += ApprovalCheck;
+
         NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnected;
     }
 
     private async void OnSceneLoaded(ulong clientId, string sceneName, LoadSceneMode loadSceneMode)
     {
         if (!NetworkManager.Singleton.IsServer) return;
+        if (sceneName == "Menu") return;
 
-        var existingPlayer = NetworkManager.Singleton.SpawnManager.GetPlayerNetworkObject(clientId);
-        if (existingPlayer != null)
-        {
-            Debug.Log($"Player {clientId} already has a player object.");
-            return;
-        }
+        NetworkObject existingPlayer = NetworkManager.Singleton.SpawnManager.GetPlayerNetworkObject(clientId);
+        // If the player already exists, do not spawn a new one
+        if (existingPlayer != null) return;
 
         await Task.Delay(500);
-
         GameObject player = NetworkManager.Singleton.NetworkConfig.Prefabs.Prefabs[0].Prefab;
         NetworkObject playerObject = Instantiate(player).GetComponent<NetworkObject>();
         playerObject.SpawnAsPlayerObject(clientId, true);
@@ -57,9 +65,11 @@ public class HandleLANConnection : MonoBehaviour
 
     private void OnClientConnected(ulong clientId)
     {
-        if (NetworkManager.Singleton.IsHost
-            && NetworkManager.Singleton.ConnectedClients.Count == MAX_PLAYER)
+        if (!NetworkManager.Singleton.IsHost || isSceneLoading) return;
+
+        if (NetworkManager.Singleton.ConnectedClients.Count == MAX_PLAYER)
         {
+            isSceneLoading = true;
             NetworkManager.Singleton.SceneManager.LoadScene("Main", LoadSceneMode.Single);
         }
     }
@@ -74,6 +84,20 @@ public class HandleLANConnection : MonoBehaviour
         ipHostInputField.text = GetLocalIPAddress();
         portHostInputField.text = "7777";
         startHostButton.onClick.AddListener(OnStartHostButtonClicked);
+        stopHostButton.onClick.AddListener(OnStopHostButtonClicked);
+    }
+
+    private void OnStopHostButtonClicked()
+    {
+        if (NetworkManager.Singleton.IsHost)
+        {
+            NetworkManager.Singleton.Shutdown();
+            connectionStatusText.text = "Host stopped.";
+        }
+        else
+        {
+            connectionStatusText.text = "Host is not running.";
+        }
     }
 
     private void ApprovalCheck(NetworkManager.ConnectionApprovalRequest request, NetworkManager.ConnectionApprovalResponse response)
@@ -113,7 +137,12 @@ public class HandleLANConnection : MonoBehaviour
             if (!NetworkManager.Singleton.IsHost)
             {
                 networkManager.StartHost();
+                connectionStatusText.text = "Waiting for players...";
                 NetworkManager.Singleton.SceneManager.OnLoadComplete += OnSceneLoaded;
+            }
+            else
+            {
+                connectionStatusText.text = "Host is already running.";
             }
         }
         else
@@ -145,6 +174,10 @@ public class HandleLANConnection : MonoBehaviour
             {
                 networkManager.StartClient();
             }
+            else
+            {
+                connectionStatusText.text = "Please stop host before starting again.";
+            }
         }
         else
         {
@@ -166,9 +199,10 @@ public class HandleLANConnection : MonoBehaviour
         throw new Exception("No network adapters with an IPv4 address in the system!");
     }
 
-    private void OnDestroy()
+    private void OnDisable()
     {
         startClientButton.onClick.RemoveAllListeners();
         startHostButton.onClick.RemoveAllListeners();
+        stopHostButton.onClick.RemoveAllListeners();
     }
 }

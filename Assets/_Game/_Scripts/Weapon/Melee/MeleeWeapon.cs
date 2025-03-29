@@ -98,7 +98,13 @@ public class MeleeWeapon : WeaponBase
         boxCollider2D.enabled = false;
     }
 
-    [Rpc(SendTo.Server)]
+    /// <summary>
+    /// Send a force to the target object.
+    /// This is used to push the enemy back when hit by the melee weapon.
+    /// </summary>
+    /// <param name="targetObject"></param>
+    /// <param name="force"></param>
+    [Rpc(SendTo.ClientsAndHost)]
     private void SendForceServerRpc(NetworkObjectReference targetObject, Vector2 force)
     {
         if (targetObject.TryGet(out NetworkObject networkObject))
