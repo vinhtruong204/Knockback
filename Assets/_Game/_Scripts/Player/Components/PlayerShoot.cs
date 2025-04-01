@@ -1,3 +1,4 @@
+using System;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -8,6 +9,8 @@ public class PlayerShoot : NetworkBehaviour
     private PlayerInputHandler playerInputHandler;
     private WeaponManager weaponManager;
     [SerializeField] private GameObject bulletPrefab;
+
+    public event Action OnShoot;
 
     private async void Awake()
     {
@@ -47,6 +50,7 @@ public class PlayerShoot : NetworkBehaviour
         if (weaponManager.CurrentWeapon is IFireable)
         {
             RequestShootRpc(playerTeamId.TeamId, OwnerClientId);
+            OnShoot?.Invoke(); // Notify subscribers that the player has shot
         }
     }
 
