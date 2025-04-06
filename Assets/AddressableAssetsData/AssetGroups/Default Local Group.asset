@@ -20,6 +20,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6afa8d543fba46047b6e407725d5afc9
+    m_Address: ak-47-shot-sfx_85bpm
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 88dde1e6cfd9cd141bc66571f7940114
     m_Address: Bullet
     m_ReadOnly: 0
