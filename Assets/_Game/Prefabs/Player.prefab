@@ -371,7 +371,7 @@ GameObject:
   - component: {fileID: 2386264505397580418}
   - component: {fileID: 2046643434538134110}
   - component: {fileID: 1439029044857714352}
-  - component: {fileID: 431868630424199748}
+  - component: {fileID: 1057849402560441880}
   m_Layer: 3
   m_Name: Player
   m_TagString: Untagged
@@ -578,7 +578,7 @@ MonoBehaviour:
   UseRigidBodyForMotion: 1
   AutoUpdateKinematicState: 1
   AutoSetKinematicOnDespawn: 1
---- !u!114 &431868630424199748
+--- !u!114 &1057849402560441880
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -587,7 +587,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2025983897225643243}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e8d0727d5ae3244e3b569694d3912374, type: 3}
+  m_Script: {fileID: 11500000, guid: fe32a90b0a8677c409b4aab1ef78f3ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
@@ -2022,6 +2022,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 159b711583f989a4d92538cef68a9558, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  fireSound: {fileID: 0}
+  playerShoot: {fileID: 0}
 --- !u!1 &6525524847196130539
 GameObject:
   m_ObjectHideFlags: 0
