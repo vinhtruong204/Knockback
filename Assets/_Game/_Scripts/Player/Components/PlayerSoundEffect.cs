@@ -41,6 +41,9 @@ public class PlayerSoundEffect : NetworkBehaviour
 
     private async void LoadAudioClipsAsync()
     {
+        if (fireSound != null) return;
+        
+        // Load the fire sound effect from Addressables
         var (asset, handle) = await AddressableLoader<AudioClip>.LoadAssetAsync("ak-47-shot-sfx_85bpm");
         if (asset != null)
         {
